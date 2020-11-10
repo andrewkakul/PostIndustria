@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">PiAndroid</string>
+    <string name="share">Share</string>
+    <string name="choose">Choose</string>
+    <string name="staticTextView">Text example</string>
+    <string name="textone">TextOne</string>
+    <string name="texttwo">TextTwo</string>
+    <string name="textthree">TextThree</string>
+    <string name="textfour">TextFour</string>
+    <string name="textfive">TextFive</string>
+</resources>
