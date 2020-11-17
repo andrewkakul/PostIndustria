@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">PostindustriaAndroid</string>
+    <string name="search">Search</string>
+    <string name="your_text">Your text</string>
 </resources>
