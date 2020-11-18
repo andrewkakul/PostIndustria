@@ -1,4 +1,4 @@
-package com.example.postindustriaandroid.Model
+package com.example.postindustriaandroid.model
 
 data class Photo(
     val  id: String,

@@ -1,6 +1,5 @@
-package com.example.postindustriaandroid.Interface
+package com.example.postindustriaandroid.model
 
-import com.example.postindustriaandroid.Model.Photo
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
@@ -11,10 +10,11 @@ interface PhotoRepository {
         const val BASE_URL = "https://www.flickr.com/services/rest/"
         const val API_FORMAT = "json"
         const val API_METHOD = "flickr.photos.search"
+        const val NOJSONCALLBACK = "1"
     }
 
     @GET(".")
     fun getPhoto(
         @QueryMap options: Map<String, String>
-    ): Call<MutableList<Photo>>
+    ): Call<photos>
 }

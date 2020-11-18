@@ -4,8 +4,8 @@ import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import com.example.postindustriaandroid.Interface.PhotoRepository
-import com.example.postindustriaandroid.Model.Photo
+import com.example.postindustriaandroid.model.PhotoRepository
+import com.example.postindustriaandroid.model.photos
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.launch
@@ -19,6 +19,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MainActivity : AppCompatActivity() {
+
+    val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,37 +39,36 @@ class MainActivity : AppCompatActivity() {
         val interceptor = HttpLoggingInterceptor()
 
         val gson = GsonBuilder()
-            .setLenient()
-            .create()
+                .setLenient()
+                .create()
 
         interceptor.level = HttpLoggingInterceptor.Level.BODY
 
         val client = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
+                .addInterceptor(interceptor)
 
         val retrofit = Retrofit.Builder()
-            .baseUrl(PhotoRepository.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .client(client.build())
-            .build()
+                .baseUrl(PhotoRepository.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client.build())
+                .build()
 
         val service = retrofit.create(PhotoRepository::class.java)
         val data: MutableMap<String, String> = HashMap()
             data["method"] = PhotoRepository.API_METHOD
             data["api_key"] = PhotoRepository.API_KEY
             data["format"] = PhotoRepository.API_FORMAT
+            data["nojsoncallback"] = PhotoRepository.NOJSONCALLBACK
             data["text"] = text
         val call = service.getPhoto(data)
 
-        call.enqueue(object : Callback<MutableList<Photo>> {
-            override fun onResponse(
-                call: Call<MutableList<Photo>>, response: Response<MutableList<Photo>>
-            ) {
-                textview.text = response.toString()
+        call.enqueue(object : Callback<photos> {
+            override fun onResponse(call: Call<photos>, response: Response<photos>) {
+                Log.d(TAG, "onResponse: $response")
+                textview.text = response.body().toString()
             }
-
-            override fun onFailure(call: Call<MutableList<Photo>>, t: Throwable) {
-                Log.e("TEXT", call.toString(), t)
+            override fun onFailure(call: Call<photos>, t: Throwable) {
+                Log.e(TAG, "onFailure: ", t)
             }
         })
     }
