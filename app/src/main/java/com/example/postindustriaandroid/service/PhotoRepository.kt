@@ -1,5 +1,6 @@
-package com.example.postindustriaandroid.model
+package com.example.postindustriaandroid.service
 
+import com.example.postindustriaandroid.model.FlickrPhotoResponce
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
@@ -16,5 +17,5 @@ interface PhotoRepository {
     @GET(".")
     fun getPhoto(
         @QueryMap options: Map<String, String>
-    ): Call<photos>
+    ): Call<FlickrPhotoResponce>
 }

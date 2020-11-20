@@ -1,6 +1,6 @@
 package com.example.postindustriaandroid.model
 
-data class photos(
+data class Photos(
         val page: String,
         val pages: String,
         val perpage: String,

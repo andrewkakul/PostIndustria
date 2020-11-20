@@ -1,4 +1,4 @@
-package com.example.postindustriaandroid
+package com.example.postindustriaandroid.ui
 
 import android.content.Intent
 import android.os.Bundle
