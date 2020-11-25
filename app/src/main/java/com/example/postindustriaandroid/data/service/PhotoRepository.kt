@@ -1,6 +1,6 @@
-package com.example.postindustriaandroid.service
+package com.example.postindustriaandroid.data.service
 
-import com.example.postindustriaandroid.model.FlickrPhotoResponce
+import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.QueryMap
@@ -12,6 +12,9 @@ interface PhotoRepository {
         const val API_FORMAT = "json"
         const val API_METHOD = "flickr.photos.search"
         const val NOJSONCALLBACK = "1"
+
+        const val FLICK_PHOTO_BASE_URL = "https://www.flickr.com/photos/"
+        const val FLICK_PHOTO_END_URL = "/in/dateposted"
     }
 
     @GET(".")
