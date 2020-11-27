@@ -1,31 +1,20 @@
 package com.example.postindustriaandroid.ui
 
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.postindustriaandroid.R
-import kotlinx.android.synthetic.main.activity_second.*
-
+import kotlinx.android.synthetic.main.activity_webview.*
 
 class WebViewActivity : AppCompatActivity() {
+
+    companion object{
+        val PHOTOURL = "photoUrlKey"
+        val SEARCHTEXT = "searchTextKey"
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_second)
-
-        if (intent == null || intent.data == null) {
-            finish()
-        }
-
-        val action = intent!!.action
-        if (action == Intent.ACTION_VIEW) {
-            intent!!.data?.let { openDeepLink(it) }
-        }
-
-    }
-    fun openDeepLink(data: Uri) {
-        if (data.getPathSegments().size >= 1) {
-            webview.loadUrl(data.toString())
-        }
+        setContentView(R.layout.activity_webview)
+        text_webview_activity.text = intent.getStringExtra(SEARCHTEXT)
+        webview.loadUrl(intent.getStringExtra(PHOTOURL).toString())
     }
 }

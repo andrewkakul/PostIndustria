@@ -10,4 +10,8 @@ data class Photo(
     val ispublic: String,
     val isfriend: String,
     val isfamily: String
-)
+) {
+    fun generateUrl(): String {
+        return "https://live.staticflickr.com/${server}/${id}_${secret}_w.jpg"
+    }
+}

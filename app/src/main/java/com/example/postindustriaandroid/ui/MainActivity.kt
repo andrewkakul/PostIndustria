@@ -1,11 +1,15 @@
 package com.example.postindustriaandroid.ui
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.postindustriaandroid.R
+import com.example.postindustriaandroid.data.adapter.SwipeToDeleteCallback
+import com.example.postindustriaandroid.data.adapter.OnCardListener
 import com.example.postindustriaandroid.data.adapter.PhotoCardAdapter
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
@@ -18,20 +22,25 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
-class MainActivity : AppCompatActivity() {
-    private val TAG = "MainActivity"
-    private var textForSearch: String = ""
-    private var cardsList: MutableList<FlickrPhotoCard> = ArrayList()
+
+class MainActivity : AppCompatActivity(), OnCardListener {
+
+    private lateinit var textForSearch: String
+    private var cardsList: ArrayList<FlickrPhotoCard> = ArrayList()
+    private lateinit var photoAdapter: PhotoCardAdapter
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        photo_cards_rv.layoutManager = LinearLayoutManager(this)
-        photo_cards_rv.adapter = PhotoCardAdapter(cardsList)
+        recyclerView = photo_cards_rv
+        photoAdapter = PhotoCardAdapter(cardsList, this)
+        recyclerView.adapter = photoAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(photoAdapter))
+        itemTouchHelper.attachToRecyclerView(recyclerView)
 
         search_btn.setOnClickListener {
             if (input_text_ET.text.isNotEmpty())
@@ -40,7 +49,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private fun executeSearch(){
         textForSearch = input_text_ET.text.toString()
@@ -62,26 +70,29 @@ class MainActivity : AppCompatActivity() {
 
         call.enqueue(object : Callback<FlickrPhotoResponce> {
             override fun onResponse(call: Call<FlickrPhotoResponce>, response: Response<FlickrPhotoResponce>) {
-                Log.d(TAG, "onResponse: $response")
                 createCardsList(response.body()!!)
+                photo_cards_rv.adapter?.notifyDataSetChanged()
             }
 
             override fun onFailure(call: Call<FlickrPhotoResponce>, t: Throwable) {
-                Log.e(TAG, "onFailure: ", t)
             }
         })
     }
 
    private fun createCardsList(element: FlickrPhotoResponce) {
-        val sizeOfList: Int = element.photos.photo.size
-        val photoCard = FlickrPhotoCard("","")
-        for(i in 0 until sizeOfList){
-            photoCard.photoUrl = PhotoRepository.FLICK_PHOTO_BASE_URL +
-                    element.photos.photo[i].owner + "/" +
-                    element.photos.photo[i].id +
-                    PhotoRepository.FLICK_PHOTO_END_URL
-            photoCard.searchText = textForSearch
-            cardsList.add(i, photoCard)
-        }
+       cardsList.clear()
+       element.photos.photo.forEach() {
+           val photoCard = FlickrPhotoCard("", "")
+           photoCard.photoUrl = it.generateUrl()
+           photoCard.searchText = textForSearch
+           cardsList.add(photoCard)
+       }
+   }
+
+    override fun onCardClicked(position: Int) {
+        val intent = Intent(this@MainActivity, WebViewActivity::class.java)
+        intent.putExtra(WebViewActivity.PHOTOURL, cardsList[position].photoUrl)
+        intent.putExtra(WebViewActivity.SEARCHTEXT, cardsList[position].searchText)
+        startActivity(intent)
     }
 }
