@@ -36,8 +36,7 @@
                 android:id="@+id/text_on_card"
                 android:layout_marginTop="16dp"
                 android:textSize="21sp"
-                android:layout_marginStart="16dp"
-                android:layout_gravity="left"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>

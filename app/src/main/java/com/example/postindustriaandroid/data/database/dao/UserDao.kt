@@ -1,19 +1,18 @@
 package com.example.postindustriaandroid.data.database.dao
 
 import androidx.room.*
-import com.example.postindustriaandroid.data.database.entity.UserEntitty
+import com.example.postindustriaandroid.data.database.entity.UserEntity
 
 @Dao
 interface UserDao {
-
     @Insert
-    fun insert(userEntitty: UserEntitty)
+    suspend fun insert(userEntity: UserEntity)
 
     @Update
-    fun update(userEntitty: UserEntitty)
+    suspend fun update(userEntity: UserEntity)
 
     @Delete
-    fun delete(userEntitty: UserEntitty)
+    suspend fun delete(userEntity: UserEntity)
 
     @Query("delete from user_table")
     fun deleteAllNotes()
