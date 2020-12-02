@@ -8,11 +8,11 @@ interface UserDao {
     @Insert
     suspend fun insert(userEntity: UserEntity)
 
-    @Update
-    suspend fun update(userEntity: UserEntity)
-
     @Delete
     suspend fun delete(userEntity: UserEntity)
+
+    @Query("SELECT * From user_table WHERE name=:login")
+    suspend fun userAuthorization(login: String): UserEntity
 
     @Query("delete from user_table")
     fun deleteAllNotes()

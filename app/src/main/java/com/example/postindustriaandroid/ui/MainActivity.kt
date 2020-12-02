@@ -2,7 +2,6 @@ package com.example.postindustriaandroid.ui
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -12,9 +11,6 @@ import com.example.postindustriaandroid.R
 import com.example.postindustriaandroid.data.adapters.SwipeToDeleteCallback
 import com.example.postindustriaandroid.data.adapters.OnCardListener
 import com.example.postindustriaandroid.data.adapters.PhotoCardAdapter
-import com.example.postindustriaandroid.data.database.PhotoViewModel
-import com.example.postindustriaandroid.data.database.PhotoViewModelFactory
-import com.example.postindustriaandroid.data.database.PhotosApplication
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
 import com.example.postindustriaandroid.data.service.PhotoRepository

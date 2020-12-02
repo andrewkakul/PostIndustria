@@ -11,8 +11,8 @@ import androidx.room.PrimaryKey
                         childColumns = ["user_id"],
                         onDelete = ForeignKey.CASCADE)])
 data class FavouritePhotoEntity(
-        @PrimaryKey(autoGenerate = true) val  id: Long,
-        val user_id: Int,
+        @PrimaryKey(autoGenerate = true) val id: Long,
+        val user_id: Long,
         val photoUrl: String,
         val searchText: String
 )

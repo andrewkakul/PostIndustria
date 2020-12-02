@@ -20,38 +20,24 @@ abstract class PhotoRoomDatabase: RoomDatabase() {
     abstract fun userDao(): UserDao
 
     companion object {
-        @Volatile
         private var INSTANCE: PhotoRoomDatabase? = null
 
-        fun getDatabase(context: Context, scope: CoroutineScope): PhotoRoomDatabase {
+        fun getDatabase(context: Context): PhotoRoomDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
                         context.applicationContext,
                         PhotoRoomDatabase::class.java,
-                        "word_database"
+                        "flickr_photo_db"
                 )
-                    .addCallback(PhotoDatabaseCallback(scope))
                     .build()
                 INSTANCE = instance
-
                 instance
             }
         }
+
+        fun destroyDataBase(){
+            INSTANCE = null
+        }
     }
 
-    private class PhotoDatabaseCallback(
-        private val scope: CoroutineScope
-    ) : RoomDatabase.Callback() {
-        override fun onCreate(db: SupportSQLiteDatabase) {
-            super.onCreate(db)
-            INSTANCE?.let { database ->
-                scope.launch {
-                    populateDatabase(database.photoCardDao())
-                }
-            }
-        }
-        fun populateDatabase(favouritePhotoDao: FavouritePhotoDao) {
-            favouritePhotoDao.deleteAllPhotos()
-        }
-    }
 }

@@ -10,11 +10,11 @@ interface FavouritePhotoDao {
     @Insert
     fun insert(favouritePhoto: FavouritePhotoEntity)
 
-    @Update
-    fun update(favouritePhoto: FavouritePhotoEntity)
-
     @Delete
     fun delete(favouritePhoto: FavouritePhotoEntity)
+
+    @Query("SELECT * FROM favouritePhoto_table WHERE photoUrl=:photoUrl AND user_id=:userID")
+    suspend fun checkIsFavourite(photoUrl: String, userID: Long): FavouritePhotoEntity
 
     @Query("SELECT * FROM favouritePhoto_table ORDER BY searchText ASC")
     fun getAlphabetizedPhoto(): Flow<List<FavouritePhotoEntity>>
