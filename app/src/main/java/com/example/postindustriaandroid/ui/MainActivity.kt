@@ -3,6 +3,7 @@ package com.example.postindustriaandroid.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.set
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +13,7 @@ import com.example.postindustriaandroid.data.adapters.SwipeToDeleteCardCallback
 import com.example.postindustriaandroid.data.adapters.OnCardListener
 import com.example.postindustriaandroid.data.adapters.PhotoCardAdapter
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
+import com.example.postindustriaandroid.data.database.entity.HistoryEntity
 import com.example.postindustriaandroid.data.database.entity.UserEntity
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
@@ -38,12 +40,14 @@ class MainActivity : AppCompatActivity(), OnCardListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        input_text_ET.setText(SharedPrefsManager.getHistory())
 
         db = PhotoRoomDatabase.getDatabase(this)
         recyclerView = photo_cards_rv
         photoAdapter = PhotoCardAdapter(cardsList, this)
         recyclerView.adapter = photoAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
+
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCardCallback(photoAdapter))
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
@@ -51,11 +55,34 @@ class MainActivity : AppCompatActivity(), OnCardListener {
             toFavoriteActivity()
         }
 
+        link_to_history_activity_btn.setOnClickListener{
+            toHistoryActivity()
+        }
+
         search_btn.setOnClickListener {
             if (input_text_ET.text.isNotEmpty())
                 lifecycleScope.launch {
+                    saveLastSearch(input_text_ET.text.toString())
                     executeSearch()
             }
+        }
+    }
+
+    private fun saveLastSearch(searchText: String) {
+        SharedPrefsManager.saveHistory(searchText)
+        lifecycleScope.launch(Dispatchers.IO){
+            val user_id = db.userDao().getUser(SharedPrefsManager.getLogin()).id
+            db.historyDao().insert(HistoryEntity(0,searchText,user_id))
+        }
+    }
+
+    private fun toHistoryActivity(){
+        lifecycleScope.launch(Dispatchers.IO) {
+            val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
+            val intent = Intent(this@MainActivity, HistoryActivity::class.java)
+            intent.putExtra(WebViewActivity.USERID, user.id)
+
+            startActivity(intent)
         }
     }
 

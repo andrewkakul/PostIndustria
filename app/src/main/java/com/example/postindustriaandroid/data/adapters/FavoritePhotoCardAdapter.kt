@@ -24,8 +24,8 @@ class FavoritePhotoCardAdapter(): RecyclerView.Adapter<FavoritePhotoCardAdapter.
 
     private var mCardList = ArrayList<Any>()
 
-    constructor(cardList: ArrayList<Any>) : this() {
-        this.mCardList = cardList
+    fun setData(favouriteList: ArrayList<Any>){
+        mCardList = favouriteList
     }
 
     open class FavoritePhotoViewHolder(view: View): RecyclerView.ViewHolder(view) {}

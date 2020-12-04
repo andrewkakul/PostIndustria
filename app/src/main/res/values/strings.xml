@@ -6,4 +6,5 @@
     <string name="logIn_btn">LogIn</string>
     <string name="go_to_your_favourite_photo">GO TO YOUR FAVOURITE PHOTO</string>
     <string name="delete">Delete</string>
+    <string name="go_to_history">Go to History</string>
 </resources>
