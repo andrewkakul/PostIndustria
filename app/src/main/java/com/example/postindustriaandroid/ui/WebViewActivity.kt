@@ -2,55 +2,47 @@ package com.example.postindustriaandroid.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import com.example.postindustriaandroid.PreviewFavouriteDataBinding
 import com.example.postindustriaandroid.R
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
-import com.example.postindustriaandroid.data.database.entity.FavouritePhotoEntity
-import com.example.postindustriaandroid.data.database.entity.UserEntity
+import com.example.postindustriaandroid.data.viewmodel.PreviewFavouriteViewModel
 import com.example.postindustriaandroid.utils.SharedPrefsManager
 import kotlinx.android.synthetic.main.activity_webview.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class WebViewActivity : AppCompatActivity() {
 
-    private var db: PhotoRoomDatabase? = null
-
+    private lateinit var db: PhotoRoomDatabase
+    private lateinit var viewModel: PreviewFavouriteViewModel
     companion object{
         const val PHOTOURL = "photoUrlKey"
         const val SEARCHTEXT = "searchTextKey"
-
+        const val USERID = "userID"
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_webview)
-        SharedPrefsManager.init(this)
-
         db = PhotoRoomDatabase.getDatabase(this)
+        SharedPrefsManager.init(this)
+        initViewModel()
+
         text_webview_activity.text = intent.getStringExtra(SEARCHTEXT)
         webview.loadUrl(intent.getStringExtra(PHOTOURL).toString())
-
-        chose_to_favorite_btn.setOnClickListener {
-            isFavorite()
-
-        }
     }
 
-    private fun isFavorite(){
-        lifecycleScope.launch(Dispatchers.IO) {
-            val photoUrl: String = intent.getStringExtra(PHOTOURL).toString()
-            val searchText: String = intent.getStringExtra(SEARCHTEXT).toString()
-            val user: UserEntity = db?.userDao()?.userAuthorization(login = SharedPrefsManager.getLogin())!!
-            val favouritePhotoEntity = db?.photoCardDao()?.checkIsFavourite(photoUrl = photoUrl, userID = user.id)
-            if (favouritePhotoEntity == null) {
-                toFavourite(user, photoUrl, searchText)
-            }else {
-                db?.photoCardDao()?.delete(favouritePhotoEntity)
-            }
-        }
-    }
+    private fun initViewModel(){
+        val photoUrl: String = intent.getStringExtra(PHOTOURL).toString()
+        val searchText: String = intent.getStringExtra(SEARCHTEXT).toString()
+        val userId: Long = intent.getLongExtra(USERID, -1)
 
-    private fun toFavourite(userEntity: UserEntity, photoUrl: String, searchText: String){
-        db?.photoCardDao()?.insert(FavouritePhotoEntity(0, userEntity.id, photoUrl, searchText))
+        viewModel = ViewModelProvider(this).get(PreviewFavouriteViewModel::class.java)
+        val binding = DataBindingUtil.setContentView(this, R.layout.activity_webview) as PreviewFavouriteDataBinding
+        binding.viewmodel = viewModel
+
+        viewModel.isFavorite.observe(this, { isFavorite ->
+            viewModel.saveData(photoUrl,searchText, db, userId)
+        })
+        viewModel.loadData(photoUrl, userId, db)
     }
 }

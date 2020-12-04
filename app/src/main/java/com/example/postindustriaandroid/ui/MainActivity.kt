@@ -8,14 +8,18 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.postindustriaandroid.R
-import com.example.postindustriaandroid.data.adapters.SwipeToDeleteCallback
+import com.example.postindustriaandroid.data.adapters.SwipeToDeleteCardCallback
 import com.example.postindustriaandroid.data.adapters.OnCardListener
 import com.example.postindustriaandroid.data.adapters.PhotoCardAdapter
+import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
+import com.example.postindustriaandroid.data.database.entity.UserEntity
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
 import com.example.postindustriaandroid.data.service.PhotoRepository
+import com.example.postindustriaandroid.utils.SharedPrefsManager
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -23,30 +27,45 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
 class MainActivity : AppCompatActivity(), OnCardListener {
 
     private lateinit var textForSearch: String
     private var cardsList: ArrayList<FlickrPhotoCard> = ArrayList()
     private lateinit var photoAdapter: PhotoCardAdapter
     private lateinit var recyclerView: RecyclerView
+    private lateinit var db: PhotoRoomDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        db = PhotoRoomDatabase.getDatabase(this)
         recyclerView = photo_cards_rv
         photoAdapter = PhotoCardAdapter(cardsList, this)
         recyclerView.adapter = photoAdapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(photoAdapter))
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCardCallback(photoAdapter))
         itemTouchHelper.attachToRecyclerView(recyclerView)
+
+        link_to_favourite_activity_btn.setOnClickListener{
+            toFavoriteActivity()
+        }
 
         search_btn.setOnClickListener {
             if (input_text_ET.text.isNotEmpty())
                 lifecycleScope.launch {
                     executeSearch()
             }
+        }
+    }
+
+    private fun toFavoriteActivity(){
+        lifecycleScope.launch(Dispatchers.IO) {
+            val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
+            val intent = Intent(this@MainActivity, FavouritePhotoActivity::class.java)
+            intent.putExtra(WebViewActivity.USERID, user.id)
+
+            startActivity(intent)
         }
     }
 
@@ -90,9 +109,13 @@ class MainActivity : AppCompatActivity(), OnCardListener {
    }
 
     override fun onCardClicked(position: Int) {
-        val intent = Intent(this@MainActivity, WebViewActivity::class.java)
-        intent.putExtra(WebViewActivity.PHOTOURL, cardsList[position].photoUrl)
-        intent.putExtra(WebViewActivity.SEARCHTEXT, cardsList[position].searchText)
-        startActivity(intent)
+        lifecycleScope.launch(Dispatchers.IO) {
+            val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
+            val intent = Intent(this@MainActivity, WebViewActivity::class.java)
+            intent.putExtra(WebViewActivity.PHOTOURL, cardsList[position].photoUrl)
+            intent.putExtra(WebViewActivity.SEARCHTEXT, cardsList[position].searchText)
+            intent.putExtra(WebViewActivity.USERID, user.id)
+            startActivity(intent)
+        }
     }
 }

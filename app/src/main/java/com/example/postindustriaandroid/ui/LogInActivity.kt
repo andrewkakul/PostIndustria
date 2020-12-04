@@ -38,7 +38,7 @@ class LogInActivity : AppCompatActivity(), View.OnClickListener {
     fun checkUserLogIn(userName: String){
         val intent = Intent(this, MainActivity::class.java)
         lifecycleScope.launch(Dispatchers.IO) {
-            if(db?.userDao()?.userAuthorization(userName) == null){
+            if(db?.userDao()?.getUser(userName) == null){
                 db?.userDao()?.insert(UserEntity(0, userName))
             }
             saveLastUserLogin(userName)

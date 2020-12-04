@@ -34,10 +34,6 @@ abstract class PhotoRoomDatabase: RoomDatabase() {
                 instance
             }
         }
-
-        fun destroyDataBase(){
-            INSTANCE = null
-        }
     }
 
 }

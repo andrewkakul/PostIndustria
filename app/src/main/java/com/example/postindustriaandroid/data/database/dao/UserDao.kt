@@ -12,7 +12,7 @@ interface UserDao {
     suspend fun delete(userEntity: UserEntity)
 
     @Query("SELECT * From user_table WHERE name=:login")
-    suspend fun userAuthorization(login: String): UserEntity
+    suspend fun getUser(login: String): UserEntity
 
     @Query("delete from user_table")
     fun deleteAllNotes()
