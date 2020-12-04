@@ -22,8 +22,11 @@ interface FavouritePhotoDao {
     @Query("SELECT * FROM favouritePhoto_table WHERE user_id=:userID")
     suspend fun getListOfFavourite(userID: Long): List<FavouritePhotoEntity>
 
-    @Query("SELECT * FROM favouritePhoto_table ORDER BY searchText ASC")
-    fun getAlphabetizedPhoto(): Flow<List<FavouritePhotoEntity>>
+    @Query("SELECT searchText FROM favouritePhoto_table WHERE user_id=:userID GROUP BY searchText")
+    fun getTextList(userID: Long): List<String>
+
+    @Query("SELECT * FROM favouritePhoto_table WHERE searchText =:searchText")
+    suspend fun getListByText(searchText: String): List<FavouritePhotoEntity>
 
     @Query("delete from favouritePhoto_table")
     fun deleteAllPhotos()

@@ -5,10 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.postindustriaandroid.R
 import com.example.postindustriaandroid.data.database.entity.FavouritePhotoEntity
+import com.example.postindustriaandroid.data.model.FavouritePhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 
 class PhotoCardAdapter(): RecyclerView.Adapter<PhotoCardAdapter.PhotoViewHolder?>(){

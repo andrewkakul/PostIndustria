@@ -4,5 +4,5 @@ import com.example.postindustriaandroid.data.database.entity.FavouritePhotoEntit
 
 data class FavouritePhotoCard(
     var photos: ArrayList<FavouritePhotoEntity>,
-    val searchText: String
+    var searchText: String
 )

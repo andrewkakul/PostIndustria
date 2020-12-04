@@ -12,32 +12,38 @@ import kotlinx.coroutines.launch
 
 class FavouriteViewModel(application: Application) : AndroidViewModel(application) {
 
-    val favoriteLiveData = MutableLiveData<List<FavouritePhotoCard>>()
+    val favoriteLiveData = MutableLiveData<ArrayList<Any>>()
 
     fun getListOfPhoto(userId: Long, db: PhotoRoomDatabase){
         viewModelScope.launch(Dispatchers.IO) {
-            val favouriteData = db.photoCardDao().getListOfFavourite(userId) as ArrayList<FavouritePhotoEntity>
-            val tmp = createList(favouriteData)
+            val favoriteData = createList(userId, db)
+            val tmp = createListAny(favoriteData)
             favoriteLiveData.postValue(tmp)
         }
     }
 
-    fun createList(favouriteData: ArrayList<FavouritePhotoEntity>): ArrayList<FavouritePhotoCard>{
-        val newList = ArrayList<FavouritePhotoCard>()
-        var lastFavouritePhotoCard: FavouritePhotoCard? = null
-
-        for(item in favouriteData){
-            val searchText = item.searchText
-            val valueObject = if (lastFavouritePhotoCard == null || lastFavouritePhotoCard.searchText != searchText){
-                val tmp = FavouritePhotoCard(ArrayList(), searchText)
-                newList.add(tmp)
-                tmp
-            }else{
-                lastFavouritePhotoCard
+    private fun createList(userId: Long, db: PhotoRoomDatabase): ArrayList<FavouritePhotoCard> {
+        val favouriteList = ArrayList<FavouritePhotoCard>()
+        viewModelScope.launch(Dispatchers.IO) {
+            val listOfText: List<String> = db.photoCardDao().getTextList(userId)
+            listOfText.forEach {
+                val photoList: ArrayList<FavouritePhotoEntity> =
+                    db.photoCardDao().getListByText(it) as ArrayList<FavouritePhotoEntity>
+                val favouriteItem = FavouritePhotoCard(photoList, it)
+                favouriteList.add(favouriteItem)
             }
-            lastFavouritePhotoCard = valueObject
-            valueObject.photos.add(item)
         }
-        return newList
+        return favouriteList
+    }
+
+    private fun createListAny(favouriteData: ArrayList<FavouritePhotoCard>): ArrayList<Any>{
+        val favouriteList = ArrayList<Any>()
+        favouriteData.forEach {
+            favouriteList.add(it)
+            it.photos.forEach {
+                favouriteList.add(it)
+            }
+        }
+        return favouriteList
     }
 }
