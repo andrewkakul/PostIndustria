@@ -4,8 +4,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.postindustriaandroid.R
@@ -13,9 +11,6 @@ import com.example.postindustriaandroid.data.database.entity.FavouritePhotoEntit
 import com.example.postindustriaandroid.data.model.FavouritePhotoCard
 import kotlinx.android.synthetic.main.item_favourite_photocard.view.*
 import kotlinx.android.synthetic.main.item_searchtext.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.withContext
 
 class FavoritePhotoCardAdapter: RecyclerView.Adapter<FavoritePhotoCardAdapter.FavoritePhotoViewHolder?>() {
 
