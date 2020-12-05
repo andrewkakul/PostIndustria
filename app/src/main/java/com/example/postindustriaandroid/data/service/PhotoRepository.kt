@@ -12,9 +12,6 @@ interface PhotoRepository {
         const val API_FORMAT = "json"
         const val API_METHOD = "flickr.photos.search"
         const val NOJSONCALLBACK = "1"
-
-        const val FLICK_PHOTO_BASE_URL = "https://www.flickr.com/photos/"
-        const val FLICK_PHOTO_END_URL = "/in/dateposted"
     }
 
     @GET(".")

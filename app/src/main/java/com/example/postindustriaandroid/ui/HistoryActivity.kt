@@ -9,7 +9,6 @@ import com.example.postindustriaandroid.R
 import com.example.postindustriaandroid.data.adapters.HistoryAdapter
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.viewmodel.HistoryViewModel
-import com.example.postindustriaandroid.data.viewmodel.PreviewFavouriteViewModel
 import kotlinx.android.synthetic.main.activity_history.*
 
 class HistoryActivity : AppCompatActivity() {

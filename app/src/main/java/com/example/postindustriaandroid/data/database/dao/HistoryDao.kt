@@ -4,7 +4,6 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.postindustriaandroid.data.database.entity.HistoryEntity
-import com.example.postindustriaandroid.data.database.entity.UserEntity
 
 @Dao
 interface HistoryDao {

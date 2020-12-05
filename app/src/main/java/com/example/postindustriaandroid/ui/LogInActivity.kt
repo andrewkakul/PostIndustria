@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import com.example.postindustriaandroid.R
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
-import com.example.postindustriaandroid.data.database.PhotoRoomDatabase_Impl
 import com.example.postindustriaandroid.data.database.entity.UserEntity
 import com.example.postindustriaandroid.utils.SharedPrefsManager
 import kotlinx.android.synthetic.main.activity_log_in.*
