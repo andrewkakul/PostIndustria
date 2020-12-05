@@ -15,7 +15,7 @@ import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import kotlinx.android.synthetic.main.item_favourite_photocard.view.*
 import kotlinx.android.synthetic.main.item_searchtext.view.*
 
-class FavoritePhotoCardAdapter(): RecyclerView.Adapter<FavoritePhotoCardAdapter.FavoritePhotoViewHolder?>() {
+class FavoritePhotoCardAdapter(): RecyclerView.Adapter<FavoritePhotoCardAdapter.FavoritePhotoViewHolder>() {
 
     companion object{
         private const val TYPE_HEADER = 0
@@ -24,8 +24,8 @@ class FavoritePhotoCardAdapter(): RecyclerView.Adapter<FavoritePhotoCardAdapter.
 
     private var mCardList = ArrayList<Any>()
 
-    fun setData(favouriteList: ArrayList<Any>){
-        mCardList = favouriteList
+    constructor(favouriteList: ArrayList<Any>) : this() {
+        this.mCardList = favouriteList
     }
 
     open class FavoritePhotoViewHolder(view: View): RecyclerView.ViewHolder(view) {}
@@ -54,7 +54,7 @@ class FavoritePhotoCardAdapter(): RecyclerView.Adapter<FavoritePhotoCardAdapter.
     }
     class TitleViewHolder(itemView: View) : FavoritePhotoViewHolder(itemView) {
         fun bind(content: FavouritePhotoCard) = with(itemView) {
-            content?.let {
+            content.let {
                 tvItemName.text = it.searchText
             }
         }
@@ -62,7 +62,7 @@ class FavoritePhotoCardAdapter(): RecyclerView.Adapter<FavoritePhotoCardAdapter.
 
     class ContentViewHolder(itemView: View) : FavoritePhotoViewHolder(itemView) {
         fun bind(content: FavouritePhotoEntity) = with(itemView) {
-                content?.let { photo ->
+                content.let { photo ->
                     Glide.with(itemView.context)
                         .load(photo.photoUrl)
                         .into(photo_onFavourite_card)

@@ -27,7 +27,7 @@ class HistoryActivity : AppCompatActivity() {
         initViewModel()
     }
 
-    fun initViewModel(){
+    private fun initViewModel(){
         val user_id = intent.getLongExtra(WebViewActivity.USERID, -1)
 
         viewModel = ViewModelProvider(this).get(HistoryViewModel::class.java)

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.postindustriaandroid.R
 import com.example.postindustriaandroid.data.adapters.FavoritePhotoCardAdapter
+import com.example.postindustriaandroid.data.adapters.HistoryAdapter
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.viewmodel.FavouriteViewModel
 import com.example.postindustriaandroid.utils.SharedPrefsManager
@@ -31,12 +32,11 @@ class FavouritePhotoActivity : AppCompatActivity() {
 
     private fun initViewModel() {
         val userId = intent.getLongExtra(WebViewActivity.USERID, -1)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        photoAdapter = FavoritePhotoCardAdapter()
-        recyclerView.adapter = photoAdapter
         viewModel = ViewModelProvider(this).get(FavouriteViewModel::class.java)
-        viewModel.favoriteLiveData.observe(this, { favoriteList ->
-                photoAdapter.setData(favoriteList)
+        viewModel.favoriteLiveData.observe(this, {
+            photoAdapter = FavoritePhotoCardAdapter(it)
+            recyclerView.layoutManager = LinearLayoutManager(this)
+            recyclerView.adapter = photoAdapter
         })
         viewModel.getListOfPhoto(userId, db)
     }

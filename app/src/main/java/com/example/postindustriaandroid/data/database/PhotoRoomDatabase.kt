@@ -28,9 +28,9 @@ abstract class PhotoRoomDatabase: RoomDatabase() {
         fun getDatabase(context: Context): PhotoRoomDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = Room.databaseBuilder(
-                        context.applicationContext,
-                        PhotoRoomDatabase::class.java,
-                        "flickr_photo_db"
+                    context.applicationContext,
+                    PhotoRoomDatabase::class.java,
+                    "flickr_photo_db"
                 )
                     .build()
                 INSTANCE = instance
