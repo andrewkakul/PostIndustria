@@ -22,15 +22,15 @@ class LogInActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_in)
         logIn_btn.setOnClickListener(this)
-        db = PhotoRoomDatabase.getDatabase(this)
-        SharedPrefsManager.init(this)
+        db = PhotoRoomDatabase.getDatabase(applicationContext)
+        SharedPrefsManager.init(applicationContext)
     }
 
     override fun onClick(v: View?) {
         if(loIn_ET.text.isNotEmpty()) {
             checkUserLogIn(loIn_ET.text.toString())
         }else{
-            Toast.makeText(this, "Login field is required!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.empty_login_field), Toast.LENGTH_SHORT).show()
         }
     }
 

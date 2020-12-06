@@ -2,6 +2,8 @@ package com.example.postindustriaandroid.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -35,13 +37,14 @@ class MainActivity : AppCompatActivity(), OnCardListener {
     private lateinit var photoAdapter: PhotoCardAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var db: PhotoRoomDatabase
+    private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         input_text_ET.setText(SharedPrefsManager.getHistory())
 
-        db = PhotoRoomDatabase.getDatabase(this)
+        db = PhotoRoomDatabase.getDatabase(applicationContext)
         recyclerView = photo_cards_rv
         photoAdapter = PhotoCardAdapter(cardsList, this)
         recyclerView.adapter = photoAdapter
@@ -120,6 +123,7 @@ class MainActivity : AppCompatActivity(), OnCardListener {
             }
 
             override fun onFailure(call: Call<FlickrPhotoResponce>, t: Throwable) {
+                Log.e(TAG, t.toString())
             }
         })
     }
@@ -127,9 +131,7 @@ class MainActivity : AppCompatActivity(), OnCardListener {
    private fun createCardsList(element: FlickrPhotoResponce) {
        cardsList.clear()
        element.photos.photo.forEach {
-           val photoCard = FlickrPhotoCard("", "")
-           photoCard.photoUrl = it.generateUrl()
-           photoCard.searchText = textForSearch
+           val photoCard = FlickrPhotoCard(textForSearch, it.generateUrl())
            cardsList.add(photoCard)
        }
    }

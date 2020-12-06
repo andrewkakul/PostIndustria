@@ -27,9 +27,8 @@ class FavouritePhotoActivity : AppCompatActivity(), OnFavouriteCardListener, Del
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_favourite_photo)
-        db = PhotoRoomDatabase.getDatabase(this)
+        db = PhotoRoomDatabase.getDatabase(applicationContext)
         recyclerView = favouritePhoto_RV
-
         initViewModel()
     }
 

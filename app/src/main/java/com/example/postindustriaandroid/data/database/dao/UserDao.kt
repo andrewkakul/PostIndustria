@@ -15,5 +15,5 @@ interface UserDao {
     suspend fun getUser(login: String): UserEntity
 
     @Query("delete from user_table")
-    fun deleteAllNotes()
+    fun deleteAllUsers()
 }
