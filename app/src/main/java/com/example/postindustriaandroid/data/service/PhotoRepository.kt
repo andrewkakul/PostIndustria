@@ -1,6 +1,6 @@
-package com.example.postindustriaandroid.service
+package com.example.postindustriaandroid.data.service
 
-import com.example.postindustriaandroid.model.FlickrPhotoResponce
+import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.QueryMap

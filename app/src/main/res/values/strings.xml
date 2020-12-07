@@ -2,4 +2,10 @@
     <string name="app_name">PostindustriaAndroid</string>
     <string name="search">Search</string>
     <string name="your_text">Your text</string>
+    <string name="logInTitle">Welcome</string>
+    <string name="logIn_btn">LogIn</string>
+    <string name="go_to_your_favourite_photo">GO TO YOUR FAVOURITE PHOTO</string>
+    <string name="delete">Delete</string>
+    <string name="go_to_history">Go to History</string>
+    <string name="empty_login_field">Login field is required!</string>
 </resources>

@@ -1,14 +1,28 @@
 package com.example.postindustriaandroid.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.postindustriaandroid.R
-import com.example.postindustriaandroid.model.FlickrPhotoResponce
-import com.example.postindustriaandroid.service.PhotoRepository
+import com.example.postindustriaandroid.data.adapters.SwipeToDeleteCardCallback
+import com.example.postindustriaandroid.data.adapters.OnCardListener
+import com.example.postindustriaandroid.data.adapters.PhotoCardAdapter
+import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
+import com.example.postindustriaandroid.data.database.entity.HistoryEntity
+import com.example.postindustriaandroid.data.database.entity.UserEntity
+import com.example.postindustriaandroid.data.model.FlickrPhotoCard
+import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
+import com.example.postindustriaandroid.data.service.PhotoRepository
+import com.example.postindustriaandroid.utils.SharedPrefsManager
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
@@ -16,71 +30,120 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+class MainActivity : AppCompatActivity(), OnCardListener {
 
-class MainActivity : AppCompatActivity() {
-    companion object{
-        const val FLICK_PHOTO_BASE_URL = "https://www.flickr.com/photos/"
-        const val FLICK_PHOTO_END_URL = "/in/dateposted"
-        const val TAG = "MainActivity"
-    }
+    private lateinit var textForSearch: String
+    private var cardsList: ArrayList<FlickrPhotoCard> = ArrayList()
+    private lateinit var photoAdapter: PhotoCardAdapter
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var db: PhotoRoomDatabase
+    private val TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        input_text_ET.setText(SharedPrefsManager.getHistory())
+
+        db = PhotoRoomDatabase.getDatabase(applicationContext)
+        recyclerView = photo_cards_rv
+        photoAdapter = PhotoCardAdapter(cardsList, this)
+        recyclerView.adapter = photoAdapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCardCallback(photoAdapter))
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
+        link_to_favourite_activity_btn.setOnClickListener{
+            toFavoriteActivity()
+        }
+
+        link_to_history_activity_btn.setOnClickListener{
+            toHistoryActivity()
+        }
 
         search_btn.setOnClickListener {
             if (input_text_ET.text.isNotEmpty())
                 lifecycleScope.launch {
+                    saveLastSearch(input_text_ET.text.toString())
                     executeSearch()
             }
         }
     }
 
-    private fun executeSearch(){
-        val text = input_text_ET.text.toString()
+    private fun saveLastSearch(searchText: String) {
+        SharedPrefsManager.saveHistory(searchText)
+        lifecycleScope.launch(Dispatchers.IO){
+            val user_id = db.userDao().getUser(SharedPrefsManager.getLogin()).id
+            db.historyDao().insert(HistoryEntity(0,searchText,user_id))
+        }
+    }
 
-        val gson = GsonBuilder()
-            .setLenient()
-            .create()
+    private fun toHistoryActivity(){
+        lifecycleScope.launch(Dispatchers.IO) {
+            val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
+            val intent = Intent(this@MainActivity, HistoryActivity::class.java)
+            intent.putExtra(WebViewActivity.USERID, user.id)
+
+            startActivity(intent)
+        }
+    }
+
+    private fun toFavoriteActivity(){
+        lifecycleScope.launch(Dispatchers.IO) {
+            val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
+            val intent = Intent(this@MainActivity, FavouritePhotoActivity::class.java)
+            intent.putExtra(WebViewActivity.USERID, user.id)
+
+            startActivity(intent)
+        }
+    }
+
+    private fun executeSearch(){
+        textForSearch = input_text_ET.text.toString()
+        val gson = GsonBuilder().setLenient().create()
 
         val retrofit = Retrofit.Builder()
             .baseUrl(PhotoRepository.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
-
         val service = retrofit.create(PhotoRepository::class.java)
-        
+
         val data: MutableMap<String, String> = HashMap()
             data["method"] = PhotoRepository.API_METHOD
             data["api_key"] = PhotoRepository.API_KEY
             data["format"] = PhotoRepository.API_FORMAT
             data["nojsoncallback"] = PhotoRepository.NOJSONCALLBACK
-            data["text"] = text
+            data["text"] = textForSearch
         val call = service.getPhoto(data)
 
         call.enqueue(object : Callback<FlickrPhotoResponce> {
             override fun onResponse(call: Call<FlickrPhotoResponce>, response: Response<FlickrPhotoResponce>) {
-                Log.d(TAG, "onResponse: $response")
-                convertJsonToUrl(response.body()!!)
+                createCardsList(response.body()!!)
+                photo_cards_rv.adapter?.notifyDataSetChanged()
             }
+
             override fun onFailure(call: Call<FlickrPhotoResponce>, t: Throwable) {
-                Log.e(TAG, "onFailure: ", t)
+                Log.e(TAG, t.toString())
             }
         })
     }
 
-    fun convertJsonToUrl(element: FlickrPhotoResponce){
-        var textToView = ""
-        val sizeOfList: Int = element.photos.photo.size
+   private fun createCardsList(element: FlickrPhotoResponce) {
+       cardsList.clear()
+       element.photos.photo.forEach {
+           val photoCard = FlickrPhotoCard(textForSearch, it.generateUrl())
+           cardsList.add(photoCard)
+       }
+   }
 
-        for(i in 0 until sizeOfList){
-            textToView = textToView +
-                    FLICK_PHOTO_BASE_URL +
-                    element.photos.photo[i].owner+"/"+
-                    element.photos.photo[i].id +
-                    FLICK_PHOTO_END_URL + "\n\n"
+    override fun onCardClicked(position: Int) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
+            val intent = Intent(this@MainActivity, WebViewActivity::class.java)
+            intent.putExtra(WebViewActivity.PHOTOURL, cardsList[position].photoUrl)
+            intent.putExtra(WebViewActivity.SEARCHTEXT, cardsList[position].searchText)
+            intent.putExtra(WebViewActivity.USERID, user.id)
+            startActivity(intent)
         }
-        textview.text = textToView
     }
-
 }
