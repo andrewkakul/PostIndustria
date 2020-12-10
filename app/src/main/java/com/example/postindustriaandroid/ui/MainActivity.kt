@@ -96,7 +96,6 @@ class MainActivity : AppCompatActivity(), OnCardListener {
             val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
             val intent = Intent(this@MainActivity, FavouritePhotoActivity::class.java)
             intent.putExtra(WebViewActivity.USERID, user.id)
-
             startActivity(intent)
         }
     }

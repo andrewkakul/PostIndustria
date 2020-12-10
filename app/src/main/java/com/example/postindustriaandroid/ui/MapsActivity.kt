@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.postindustriaandroid.R
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -20,10 +21,10 @@ import kotlinx.android.synthetic.main.activity_maps.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
+    private val zoomLevel = 15f
     private lateinit var map: GoogleMap
     private lateinit var latLng: LatLng
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
     private val REQUEST_LOCATION_PERMISSION = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,41 +41,62 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun toMapSearchActivity() {
-        val intent = Intent(this, MapSearchActivity::class.java)
-        startActivity(intent)
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+        enableMyLocation()
+        setMapLongClick(map)
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        checkPermission()
-        map = googleMap
-        val zoomLevel = 15f
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener {
-            val latitude = it.latitude
-            val longitude = it.longitude
-            latLng = LatLng(latitude, longitude)
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel))
-            map.addMarker(MarkerOptions().position(latLng))
+    private fun setMapLongClick(map: GoogleMap) {
+        map.setOnMapLongClickListener {
+            latLng = it
+            map.clear()
+            map.addMarker(
+                MarkerOptions()
+                    .position(latLng)
+            )
         }
     }
 
-    private fun checkPermission() {
-        applicationContext?.let { context ->
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                val array = arrayOf(
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-                )
-                requestPermissions(array, REQUEST_LOCATION_PERMISSION)
+    private fun isPermissionGranted() : Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun enableMyLocation() {
+        if (isPermissionGranted()) {
+            map.isMyLocationEnabled = true
+            fusedLocationProviderClient.lastLocation.addOnSuccessListener {
+                latLng = LatLng(it.latitude, it.longitude)
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomLevel))
+                map.addMarker(MarkerOptions().position(latLng))
             }
         }
+        else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_LOCATION_PERMISSION
+            )
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray) {
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.contains(PackageManager.PERMISSION_GRANTED)) {
+                enableMyLocation()
+            }
+        }
+    }
+
+    private fun toMapSearchActivity() {
+        val intent = Intent(this, MapSearchActivity::class.java)
+        intent.putExtra(MapSearchActivity.PHOTO_LAT, latLng.latitude)
+        intent.putExtra(MapSearchActivity.PHOTO_lON, latLng.longitude)
+        startActivity(intent)
     }
 }
