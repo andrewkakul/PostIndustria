@@ -28,7 +28,7 @@ class PreviewFavouriteViewModel(application: Application) : AndroidViewModel(app
             }else {
                 val favouritePhotoEntity =
                     db.photoCardDao().getFavourite(photoUrl = photoUrl, userID = userId)
-                favouritePhotoEntity.let {
+                favouritePhotoEntity?.let {
                     db.photoCardDao().delete(favouritePhotoEntity)}
             }
         }
