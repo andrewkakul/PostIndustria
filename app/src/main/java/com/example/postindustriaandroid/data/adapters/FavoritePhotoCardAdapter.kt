@@ -18,11 +18,11 @@ class FavoritePhotoCardAdapter(): RecyclerView.Adapter<FavoritePhotoCardAdapter.
     }
 
     constructor(onFavouriteCardListener: OnFavouriteCardListener) : this() {
-        this.mCardListener = onFavouriteCardListener
+        this.CardListener = onFavouriteCardListener
     }
 
-    private var mCardList = ArrayList<Any>()
-    private lateinit var mCardListener: OnFavouriteCardListener
+    private var CardList = ArrayList<Any>()
+    private lateinit var CardListener: OnFavouriteCardListener
 
     abstract class FavoritePhotoViewHolder(view: View): RecyclerView.ViewHolder(view) {}
 
@@ -34,14 +34,14 @@ class FavoritePhotoCardAdapter(): RecyclerView.Adapter<FavoritePhotoCardAdapter.
             }
             TYPE_CONTENT ->{
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.item_favourite_photocard, parent, false)
-                ContentViewHolder(view, mCardListener)
+                ContentViewHolder(view, CardListener)
             }
             else -> throw IllegalArgumentException("Invalid view type")
         }
     }
 
     override fun onBindViewHolder(holder: FavoritePhotoViewHolder, position: Int) {
-        val element = mCardList[position]
+        val element = CardList[position]
         when (holder) {
             is TitleViewHolder -> holder.bind(element as String)
             is ContentViewHolder -> holder.bind(element as FavouritePhotoEntity)
@@ -72,7 +72,7 @@ class FavoritePhotoCardAdapter(): RecyclerView.Adapter<FavoritePhotoCardAdapter.
 
 
     override fun getItemViewType(position: Int): Int {
-        return when (mCardList[position]) {
+        return when (CardList[position]) {
             is String -> TYPE_HEADER
             is FavouritePhotoEntity -> TYPE_CONTENT
             else -> throw IllegalArgumentException("Invalid type of data " + position)
@@ -80,28 +80,28 @@ class FavoritePhotoCardAdapter(): RecyclerView.Adapter<FavoritePhotoCardAdapter.
     }
 
     override fun getItemCount(): Int {
-        return mCardList.size
+        return CardList.size
     }
 
     fun checkPreviewElement(position: Int): Boolean{
-       return when(mCardList[position-1]){
+       return when(CardList[position-1]){
            is String -> true
            else -> false
        }
     }
 
     fun deleteItem(position: Int) {
-        mCardList.remove(mCardList[position])
+        CardList.remove(CardList[position])
         notifyItemRemoved(position)
     }
 
     fun getItem(position: Int): Any{
-        return mCardList[position]
+        return CardList[position]
     }
 
 
     fun setData(favouriteData: ArrayList<Any>){
-        mCardList = favouriteData
+        CardList = favouriteData
         notifyDataSetChanged()
     }
 }

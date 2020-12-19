@@ -29,14 +29,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:background="@color/grey_100"
+            android:orientation="horizontal"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/webview">
@@ -53,11 +54,21 @@
 
             <com.google.android.material.switchmaterial.SwitchMaterial
                 android:id="@+id/chose_to_favorite_btn"
-                android:checked="@={viewmodel.isFavorite}"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:checked="@={viewmodel.isFavorite}" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/download_image_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/download"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

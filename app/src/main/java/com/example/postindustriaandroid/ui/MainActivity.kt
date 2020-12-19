@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity(), OnCardListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         input_text_ET.setText(SharedPrefsManager.getHistory())
 
         db = PhotoRoomDatabase.getDatabase(applicationContext)
@@ -58,6 +59,10 @@ class MainActivity : AppCompatActivity(), OnCardListener {
 
         IV_link_to_history.setOnClickListener{
             toHistoryActivity()
+        }
+
+        IV_link_to_gallery.setOnClickListener {
+            toGalleryActivity()
         }
 
         IV_link_to_map.setOnClickListener {
@@ -78,6 +83,15 @@ class MainActivity : AppCompatActivity(), OnCardListener {
         lifecycleScope.launch(Dispatchers.IO){
             val user_id = db.userDao().getUser(SharedPrefsManager.getLogin()).id
             db.historyDao().insert(HistoryEntity(0,searchText,user_id))
+        }
+    }
+
+    private fun  toGalleryActivity(){
+        lifecycleScope.launch {
+            val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
+            val intent = Intent(this@MainActivity, GalleryActivity::class.java)
+            intent.putExtra(WebViewActivity.USERID, user.id)
+            startActivity(intent)
         }
     }
 

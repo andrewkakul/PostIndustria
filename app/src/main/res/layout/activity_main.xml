@@ -27,6 +27,7 @@
             android:id="@+id/search_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:text="@string/search" />
     </LinearLayout>
@@ -58,6 +59,14 @@
             android:layout_weight="1"
             android:layout_gravity="center"
             app:srcCompat="@drawable/ic_map_24px" />
+
+        <ImageView
+            android:id="@+id/IV_link_to_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_photo_library_24px" />
 
         <ImageView
             android:id="@+id/IV_link_to_history"

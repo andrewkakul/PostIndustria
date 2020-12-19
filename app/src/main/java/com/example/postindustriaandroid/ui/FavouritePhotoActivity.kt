@@ -16,7 +16,6 @@ import kotlinx.android.synthetic.main.activity_favourite_photo.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-
 class FavouritePhotoActivity : AppCompatActivity(), OnFavouriteCardListener, DeleteItemListener {
 
     private lateinit var db: PhotoRoomDatabase

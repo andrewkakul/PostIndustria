@@ -12,12 +12,12 @@ import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 
 class PhotoCardAdapter(): RecyclerView.Adapter<PhotoCardAdapter.PhotoViewHolder?>(){
 
-    private lateinit var mCardList: ArrayList<FlickrPhotoCard>
-    private lateinit var mCardListener: OnCardListener
+    private lateinit var CardList: ArrayList<FlickrPhotoCard>
+    private lateinit var CardListener: OnCardListener
 
     constructor(cardList: ArrayList<FlickrPhotoCard>, onCardListener: OnCardListener) : this() {
-        this.mCardList = cardList
-        this.mCardListener = onCardListener
+        this.CardList = cardList
+        this.CardListener = onCardListener
     }
 
     class PhotoViewHolder(view: View, onCardListener: OnCardListener): RecyclerView.ViewHolder(view), View.OnClickListener {
@@ -43,19 +43,19 @@ class PhotoCardAdapter(): RecyclerView.Adapter<PhotoCardAdapter.PhotoViewHolder?
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PhotoViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_photocard, parent, false)
-        return PhotoViewHolder(itemView, mCardListener)
+        return PhotoViewHolder(itemView, CardListener)
     }
 
     override fun onBindViewHolder(holder: PhotoViewHolder, position: Int) {
-        holder.bind(mCardList[position])
+        holder.bind(CardList[position])
     }
 
     override fun getItemCount(): Int {
-        return mCardList.size
+        return CardList.size
     }
 
     fun deleteItem(position: Int) {
-        mCardList.remove(mCardList[position])
+        CardList.remove(CardList[position])
         notifyItemRemoved(position)
     }
 }
