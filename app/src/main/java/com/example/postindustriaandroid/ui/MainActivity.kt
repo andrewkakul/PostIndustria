@@ -3,7 +3,6 @@ package com.example.postindustriaandroid.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -42,6 +41,7 @@ class MainActivity : AppCompatActivity(), OnCardListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
         input_text_ET.setText(SharedPrefsManager.getHistory())
 
         db = PhotoRoomDatabase.getDatabase(applicationContext)
@@ -53,12 +53,20 @@ class MainActivity : AppCompatActivity(), OnCardListener {
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCardCallback(photoAdapter))
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
-        link_to_favourite_activity_btn.setOnClickListener{
+        IV_link_to_favourite.setOnClickListener{
             toFavoriteActivity()
         }
 
-        link_to_history_activity_btn.setOnClickListener{
+        IV_link_to_history.setOnClickListener{
             toHistoryActivity()
+        }
+
+        IV_link_to_gallery.setOnClickListener {
+            toGalleryActivity()
+        }
+
+        IV_link_to_map.setOnClickListener {
+            toMapsActivity()
         }
 
         search_btn.setOnClickListener {
@@ -78,6 +86,15 @@ class MainActivity : AppCompatActivity(), OnCardListener {
         }
     }
 
+    private fun  toGalleryActivity(){
+        lifecycleScope.launch {
+            val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
+            val intent = Intent(this@MainActivity, GalleryActivity::class.java)
+            intent.putExtra(WebViewActivity.USERID, user.id)
+            startActivity(intent)
+        }
+    }
+
     private fun toHistoryActivity(){
         lifecycleScope.launch(Dispatchers.IO) {
             val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
@@ -93,9 +110,13 @@ class MainActivity : AppCompatActivity(), OnCardListener {
             val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
             val intent = Intent(this@MainActivity, FavouritePhotoActivity::class.java)
             intent.putExtra(WebViewActivity.USERID, user.id)
-
             startActivity(intent)
         }
+    }
+
+    private fun toMapsActivity(){
+        val intent = Intent(this@MainActivity, MapsActivity::class.java)
+        startActivity(intent)
     }
 
     private fun executeSearch(){

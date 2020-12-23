@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 
 class SwipeToDeleteCardCallback(adapter: PhotoCardAdapter) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-    private var mAdapter: PhotoCardAdapter = adapter
+    private var adapter: PhotoCardAdapter = adapter
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
        return false
@@ -12,6 +12,6 @@ class SwipeToDeleteCardCallback(adapter: PhotoCardAdapter) : ItemTouchHelper.Sim
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        mAdapter.deleteItem(position)
+        adapter.deleteItem(position)
     }
 }
