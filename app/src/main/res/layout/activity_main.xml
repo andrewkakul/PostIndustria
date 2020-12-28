@@ -44,32 +44,36 @@
         android:layout_height="64dp"
         android:background="@color/white"
         android:orientation="horizontal">
-        <ImageView
+        <ImageButton
             android:id="@+id/IV_link_to_favourite"
+            android:background="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
             app:srcCompat="@drawable/ic_favorite_border_24px" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/IV_link_to_map"
+            android:background="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
             app:srcCompat="@drawable/ic_map_24px" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/IV_link_to_gallery"
+            android:background="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
             app:srcCompat="@drawable/ic_photo_library_24px" />
 
-        <ImageView
+        <ImageButton
             android:id="@+id/IV_link_to_history"
+            android:background="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -11,6 +11,7 @@ import androidx.room.PrimaryKey
         childColumns = ["user_id"],
         onDelete = ForeignKey.CASCADE)])
 data class FilesEntity(
-    @PrimaryKey(autoGenerate = false) val uri: String,
+    @PrimaryKey(autoGenerate = true) val id: Long,
+    val uri: String,
     val user_id: Long
 )

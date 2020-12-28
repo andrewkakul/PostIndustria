@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.postindustriaandroid.R
 import com.example.postindustriaandroid.data.adapters.DeleteFileListener
-import com.example.postindustriaandroid.data.adapters.DownloadFilesAdapter
+import com.example.postindustriaandroid.data.adapters.files.DownloadFilesAdapter
 import com.example.postindustriaandroid.data.adapters.SwipeToDeleteDownloadCard
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.database.entity.FilesEntity
@@ -76,6 +76,7 @@ class GalleryActivity : AppCompatActivity(), DeleteFileListener {
                     FileManager.createImageFile()
                 } catch (ex: IOException) {
                     Log.d("Gallery", "Fail create", ex)
+                    return
                 }
                 val photoURI = FileManager.getUri()
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
@@ -99,7 +100,7 @@ class GalleryActivity : AppCompatActivity(), DeleteFileListener {
                     Activity.RESULT_OK -> {
                         FileManager.deleteCacheFile()
                         lifecycleScope.launch(Dispatchers.IO) {
-                            db.filesDao().insert(FilesEntity(FileManager.cropPhotoUri.toString(), userId!!))
+                            db.filesDao().insert(FilesEntity(0, FileManager.cropPhotoUri.toString(), userId!!))
                             viewModel.getListOfFiles(db, userId!!)
                         }
                     }

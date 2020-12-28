@@ -2,6 +2,7 @@ package com.example.postindustriaandroid.data.adapters
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.postindustriaandroid.data.adapters.files.DownloadFilesAdapter
 import com.example.postindustriaandroid.data.database.entity.FilesEntity
 
 class SwipeToDeleteDownloadCard(adapter: DownloadFilesAdapter, deleteFileListener: DeleteFileListener) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
