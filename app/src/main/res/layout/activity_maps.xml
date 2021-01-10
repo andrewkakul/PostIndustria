@@ -4,7 +4,6 @@
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_100"
     android:orientation="vertical">
 
     <androidx.fragment.app.FragmentContainerView
@@ -16,10 +15,9 @@
     tools:context=".ui.MapsActivity" >
     </androidx.fragment.app.FragmentContainerView>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/search_map_btn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        style="@style/RegularButton"
         android:layout_gravity="center"
         android:text="@string/search" />
 </LinearLayout>

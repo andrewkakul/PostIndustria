@@ -27,7 +27,7 @@ class LogInActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        if (loIn_ET.text.isNotEmpty()) {
+        if (loIn_ET.text?.isNotEmpty() == true) {
             checkUserLogIn(loIn_ET.text.toString())
         } else {
             Toast.makeText(this, getString(R.string.empty_login_field), Toast.LENGTH_SHORT).show()

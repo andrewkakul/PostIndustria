@@ -1,9 +1,13 @@
 package com.example.postindustriaandroid.ui
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -71,13 +75,34 @@ class MainActivity : AppCompatActivity(), OnCardListener {
         }
 
         search_btn.setOnClickListener {
-            if (input_text_ET.text.isNotEmpty())
+            if (input_text_ET.text?.isNotEmpty() == true)
                 lifecycleScope.launch {
                     saveLastSearch(input_text_ET.text.toString())
                     executeSearch()
             }
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menuThemeChange -> {
+                val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+                when (currentNightMode) {
+                    Configuration.UI_MODE_NIGHT_YES ->
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    Configuration.UI_MODE_NIGHT_NO ->
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+            }
+        }
+        return true
+    }
+
 
     private fun saveLastSearch(searchText: String) {
         SharedPrefsManager.saveHistory(searchText)

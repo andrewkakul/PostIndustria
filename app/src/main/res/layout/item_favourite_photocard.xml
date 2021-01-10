@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:paddingTop="16dp">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -22,7 +22,7 @@
             android:layout_marginBottom="16dp"
             android:orientation="vertical">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/photo_onFavourite_card"
                 android:layout_width="match_parent"
                 android:layout_height="256dp"
@@ -32,14 +32,13 @@
                 android:layout_marginTop="16dp"
                 tools:srcCompat="@tools:sample/avatars" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/delete_favorite_btn"
+                style="@style/RegularButton"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
                 android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
                 android:text="@string/delete" />
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
