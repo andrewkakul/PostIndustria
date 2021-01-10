@@ -27,9 +27,9 @@ class LogInActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        if(loIn_ET.text.isNotEmpty()) {
+        if (loIn_ET.text.isNotEmpty()) {
             checkUserLogIn(loIn_ET.text.toString())
-        }else{
+        } else {
             Toast.makeText(this, getString(R.string.empty_login_field), Toast.LENGTH_SHORT).show()
         }
     }
@@ -37,7 +37,7 @@ class LogInActivity : AppCompatActivity(), View.OnClickListener {
     fun checkUserLogIn(userName: String){
         val intent = Intent(this, MainActivity::class.java)
         lifecycleScope.launch(Dispatchers.IO) {
-            if(db?.userDao()?.getUser(userName) == null){
+            if (db?.userDao()?.getUser(userName) == null){
                 db?.userDao()?.insert(UserEntity(0, userName))
             }
             saveLastUserLogin(userName)

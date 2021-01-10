@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.postindustriaandroid.R
-import com.example.postindustriaandroid.data.adapters.SwipeToDeleteCardCallback
+import com.example.postindustriaandroid.data.adapters.search.SwipeToDeleteCardCallback
 import com.example.postindustriaandroid.data.adapters.OnCardListener
 import com.example.postindustriaandroid.data.adapters.PhotoCardAdapter
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
@@ -17,6 +17,7 @@ import com.example.postindustriaandroid.data.database.entity.HistoryEntity
 import com.example.postindustriaandroid.data.database.entity.UserEntity
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
+import com.example.postindustriaandroid.data.service.NetworkManager
 import com.example.postindustriaandroid.data.service.PhotoRepository
 import com.example.postindustriaandroid.utils.SharedPrefsManager
 import com.google.gson.GsonBuilder
@@ -121,20 +122,8 @@ class MainActivity : AppCompatActivity(), OnCardListener {
 
     private fun executeSearch(){
         textForSearch = input_text_ET.text.toString()
-        val gson = GsonBuilder().setLenient().create()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(PhotoRepository.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-        val service = retrofit.create(PhotoRepository::class.java)
-
-        val data: MutableMap<String, String> = HashMap()
-            data["method"] = PhotoRepository.API_METHOD
-            data["api_key"] = PhotoRepository.API_KEY
-            data["format"] = PhotoRepository.API_FORMAT
-            data["nojsoncallback"] = PhotoRepository.NOJSONCALLBACK
-            data["text"] = textForSearch
+        val service = NetworkManager.createService()
+        val data = NetworkManager.createData(textForSearch)
         val call = service.getPhoto(data)
 
         call.enqueue(object : Callback<FlickrPhotoResponce> {

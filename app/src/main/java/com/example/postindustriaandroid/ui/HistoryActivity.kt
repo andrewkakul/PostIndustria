@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.postindustriaandroid.R
-import com.example.postindustriaandroid.data.adapters.HistoryAdapter
+import com.example.postindustriaandroid.data.adapters.history.HistoryAdapter
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.viewmodel.HistoryViewModel
 import kotlinx.android.synthetic.main.activity_history.*

@@ -11,21 +11,19 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.postindustriaandroid.R
 import com.example.postindustriaandroid.data.adapters.OnCardListener
 import com.example.postindustriaandroid.data.adapters.PhotoCardAdapter
-import com.example.postindustriaandroid.data.adapters.SwipeToDeleteCardCallback
+import com.example.postindustriaandroid.data.adapters.search.SwipeToDeleteCardCallback
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.database.entity.UserEntity
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
+import com.example.postindustriaandroid.data.service.NetworkManager
 import com.example.postindustriaandroid.data.service.PhotoRepository
 import com.example.postindustriaandroid.utils.SharedPrefsManager
 import com.google.android.gms.maps.model.LatLng
-import com.google.gson.GsonBuilder
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import kotlinx.android.synthetic.main.activity_map_search.*
 import kotlinx.coroutines.Dispatchers
 
@@ -61,22 +59,8 @@ class MapSearchActivity : AppCompatActivity(), OnCardListener {
 
     private fun executeSearch() {
         val latLng = LatLng(intent.getDoubleExtra(PHOTO_LAT, -1.1), intent.getDoubleExtra(PHOTO_lON, -1.1))
-        val gson = GsonBuilder().setLenient().create()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl(PhotoRepository.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
-            .build()
-        val service = retrofit.create(PhotoRepository::class.java)
-
-        val data: MutableMap<String, String> = HashMap()
-        data["method"] = PhotoRepository.API_METHOD
-        data["api_key"] = PhotoRepository.API_KEY
-        data["format"] = PhotoRepository.API_FORMAT
-        data["nojsoncallback"] = PhotoRepository.NOJSONCALLBACK
-        data["lat"] = latLng.latitude.toString()
-        data["lon"] = latLng.longitude.toString()
-
+        val service = NetworkManager.createService()
+        val data = NetworkManager.createData(latLng)
         val call = service.getPhoto(data)
 
         call.enqueue(object : Callback<FlickrPhotoResponce> {

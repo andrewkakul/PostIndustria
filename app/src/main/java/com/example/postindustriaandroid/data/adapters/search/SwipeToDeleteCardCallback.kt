@@ -1,7 +1,8 @@
-package com.example.postindustriaandroid.data.adapters
+package com.example.postindustriaandroid.data.adapters.search
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.postindustriaandroid.data.adapters.PhotoCardAdapter
 
 class SwipeToDeleteCardCallback(adapter: PhotoCardAdapter) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
     private var adapter: PhotoCardAdapter = adapter

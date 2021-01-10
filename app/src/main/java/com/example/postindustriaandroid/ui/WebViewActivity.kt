@@ -61,7 +61,7 @@ class WebViewActivity : AppCompatActivity() {
         val binding = DataBindingUtil.setContentView(this, R.layout.activity_webview) as PreviewFavouriteDataBinding
         binding.viewmodel = viewModel
 
-        viewModel.isFavorite.observe(this, { isFavorite ->
+        viewModel.isFavorite.observe(this, {
             viewModel.saveData(photoUrl, searchText, db, userId)
         })
         viewModel.loadData(photoUrl, userId, db)
@@ -110,7 +110,7 @@ class WebViewActivity : AppCompatActivity() {
                     val file = File(dir, "${timeStamp}.jpg")
                     resource?.copyTo(file)
                     lifecycleScope.launch(Dispatchers.IO) {
-                        db.filesDao().insert(FilesEntity(Uri.fromFile(file).toString(), userId))
+                        db.filesDao().insert(FilesEntity(0, Uri.fromFile(file).toString(), userId))
                     }
                     return false
                 }

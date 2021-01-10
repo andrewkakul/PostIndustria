@@ -1,4 +1,4 @@
-package com.example.postindustriaandroid.data.adapters
+package com.example.postindustriaandroid.data.adapters.history
 
 import android.view.LayoutInflater
 import android.view.View
