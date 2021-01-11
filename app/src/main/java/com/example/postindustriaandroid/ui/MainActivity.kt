@@ -1,13 +1,11 @@
 package com.example.postindustriaandroid.ui
 
 import android.content.Intent
-import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,17 +20,13 @@ import com.example.postindustriaandroid.data.database.entity.UserEntity
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
 import com.example.postindustriaandroid.data.service.NetworkManager
-import com.example.postindustriaandroid.data.service.PhotoRepository
 import com.example.postindustriaandroid.utils.SharedPrefsManager
-import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), OnCardListener {
 
@@ -43,10 +37,16 @@ class MainActivity : AppCompatActivity(), OnCardListener {
     private lateinit var db: PhotoRoomDatabase
     private val TAG = "MainActivity"
 
+    companion object{
+        const val DAY = "day"
+        const val NIGHT = "night"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (SharedPrefsManager.getTheme() == NIGHT)
+            setTheme(R.style.Theme_PostindustriaAndroid_Dark)
         setContentView(R.layout.activity_main)
-
         input_text_ET.setText(SharedPrefsManager.getHistory())
 
         db = PhotoRoomDatabase.getDatabase(applicationContext)
@@ -90,14 +90,13 @@ class MainActivity : AppCompatActivity(), OnCardListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.menuThemeChange -> {
-                val currentNightMode = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
-                when (currentNightMode) {
-                    Configuration.UI_MODE_NIGHT_YES ->
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    Configuration.UI_MODE_NIGHT_NO ->
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                }
+            R.id.menuDayThemeChange -> {
+                SharedPrefsManager.saveTheme(DAY)
+                recreate()
+            }
+            R.id.menuNightThemeChange->{
+                SharedPrefsManager.saveTheme(NIGHT)
+                recreate()
             }
         }
         return true

@@ -36,6 +36,7 @@
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/text_on_card"
+                android:textColor="?attr/darkTextColor"
                 android:layout_marginTop="16dp"
                 android:textSize="21sp"
                 android:layout_gravity="center"

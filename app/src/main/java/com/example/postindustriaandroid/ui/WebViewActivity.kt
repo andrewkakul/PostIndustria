@@ -41,6 +41,8 @@ class WebViewActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (SharedPrefsManager.getTheme() == MainActivity.NIGHT)
+            setTheme(R.style.Theme_PostindustriaAndroid_Dark)
         db = PhotoRoomDatabase.getDatabase(this)
         SharedPrefsManager.init(this)
         initViewModel()

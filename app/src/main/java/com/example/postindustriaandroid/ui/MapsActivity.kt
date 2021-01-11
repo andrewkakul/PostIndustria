@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.postindustriaandroid.R
+import com.example.postindustriaandroid.utils.SharedPrefsManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -29,6 +30,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (SharedPrefsManager.getTheme() == MainActivity.NIGHT)
+            setTheme(R.style.Theme_PostindustriaAndroid_Dark)
         setContentView(R.layout.activity_maps)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
