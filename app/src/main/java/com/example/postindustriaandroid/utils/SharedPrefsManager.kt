@@ -1,5 +1,4 @@
 package com.example.postindustriaandroid.utils
-
 import android.content.Context
 
 object SharedPrefsManager {
@@ -7,6 +6,7 @@ object SharedPrefsManager {
     private const val APP_PREFERENCES = "appPreferences"
     private const val LOGIN_KEY = "loginKey"
     private const val HISTORY_REQUEST_KEY = "searchKey"
+    private const val THEME_KEY = "themekey"
 
     private lateinit var context: Context
     fun init(context: Context) {
@@ -34,6 +34,14 @@ object SharedPrefsManager {
         return context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
             .getString(HISTORY_REQUEST_KEY, null) ?: ""
     }
-
-
+    fun saveTheme(theme: String){
+        context.getSharedPreferences(APP_PREFERENCES,Context.MODE_PRIVATE).edit().apply(){
+            this.putString(THEME_KEY, theme)
+            this.apply()
+        }
+    }
+    fun getTheme(): String{
+        return context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
+            .getString(THEME_KEY, null) ?: ""
+    }
 }

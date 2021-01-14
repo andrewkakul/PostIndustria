@@ -12,6 +12,7 @@ import com.example.postindustriaandroid.data.adapters.*
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.database.entity.FavouritePhotoEntity
 import com.example.postindustriaandroid.data.viewmodel.FavouriteViewModel
+import com.example.postindustriaandroid.utils.SharedPrefsManager
 import kotlinx.android.synthetic.main.activity_favourite_photo.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,6 +26,8 @@ class FavouritePhotoActivity : AppCompatActivity(), OnFavouriteCardListener, Del
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (SharedPrefsManager.getTheme() == "night")
+            setTheme(R.style.Theme_PostindustriaAndroid_Dark)
         setContentView(R.layout.activity_favourite_photo)
         db = PhotoRoomDatabase.getDatabase(applicationContext)
         recyclerView = favouritePhoto_RV

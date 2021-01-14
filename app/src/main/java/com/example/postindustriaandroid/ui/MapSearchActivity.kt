@@ -17,7 +17,6 @@ import com.example.postindustriaandroid.data.database.entity.UserEntity
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
 import com.example.postindustriaandroid.data.service.NetworkManager
-import com.example.postindustriaandroid.data.service.PhotoRepository
 import com.example.postindustriaandroid.utils.SharedPrefsManager
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
@@ -42,6 +41,8 @@ class MapSearchActivity : AppCompatActivity(), OnCardListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (SharedPrefsManager.getTheme() == MainActivity.NIGHT)
+            setTheme(R.style.Theme_PostindustriaAndroid_Dark)
         setContentView(R.layout.activity_map_search)
 
         db = PhotoRoomDatabase.getDatabase(applicationContext)

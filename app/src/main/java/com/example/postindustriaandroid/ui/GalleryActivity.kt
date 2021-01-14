@@ -20,6 +20,7 @@ import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.database.entity.FilesEntity
 import com.example.postindustriaandroid.data.viewmodel.FilesViewModel
 import com.example.postindustriaandroid.utils.FileManager
+import com.example.postindustriaandroid.utils.SharedPrefsManager
 import com.yalantis.ucrop.UCrop
 import kotlinx.android.synthetic.main.activity_gallery.*
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +42,8 @@ class GalleryActivity : AppCompatActivity(), DeleteFileListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (SharedPrefsManager.getTheme() == MainActivity.NIGHT)
+            setTheme(R.style.Theme_PostindustriaAndroid_Dark)
         setContentView(R.layout.activity_gallery)
         FileManager.init(applicationContext)
         db = PhotoRoomDatabase.getDatabase(applicationContext)

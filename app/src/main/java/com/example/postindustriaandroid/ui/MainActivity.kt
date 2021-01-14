@@ -3,6 +3,8 @@ package com.example.postindustriaandroid.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -18,17 +20,13 @@ import com.example.postindustriaandroid.data.database.entity.UserEntity
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
 import com.example.postindustriaandroid.data.service.NetworkManager
-import com.example.postindustriaandroid.data.service.PhotoRepository
 import com.example.postindustriaandroid.utils.SharedPrefsManager
-import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), OnCardListener {
 
@@ -39,10 +37,16 @@ class MainActivity : AppCompatActivity(), OnCardListener {
     private lateinit var db: PhotoRoomDatabase
     private val TAG = "MainActivity"
 
+    companion object{
+        const val DAY = "day"
+        const val NIGHT = "night"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (SharedPrefsManager.getTheme() == NIGHT)
+            setTheme(R.style.Theme_PostindustriaAndroid_Dark)
         setContentView(R.layout.activity_main)
-
         input_text_ET.setText(SharedPrefsManager.getHistory())
 
         db = PhotoRoomDatabase.getDatabase(applicationContext)
@@ -71,13 +75,33 @@ class MainActivity : AppCompatActivity(), OnCardListener {
         }
 
         search_btn.setOnClickListener {
-            if (input_text_ET.text.isNotEmpty())
+            if (input_text_ET.text?.isNotEmpty() == true)
                 lifecycleScope.launch {
                     saveLastSearch(input_text_ET.text.toString())
                     executeSearch()
             }
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menuDayThemeChange -> {
+                SharedPrefsManager.saveTheme(DAY)
+                recreate()
+            }
+            R.id.menuNightThemeChange->{
+                SharedPrefsManager.saveTheme(NIGHT)
+                recreate()
+            }
+        }
+        return true
+    }
+
 
     private fun saveLastSearch(searchText: String) {
         SharedPrefsManager.saveHistory(searchText)

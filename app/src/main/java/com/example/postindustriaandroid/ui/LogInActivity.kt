@@ -19,15 +19,23 @@ class LogInActivity : AppCompatActivity(), View.OnClickListener {
     private var db: PhotoRoomDatabase? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        SharedPrefsManager.init(applicationContext)
         super.onCreate(savedInstanceState)
+        if (SharedPrefsManager.getTheme() == MainActivity.NIGHT)
+            setTheme(R.style.Theme_PostindustriaAndroid_Dark)
         setContentView(R.layout.activity_log_in)
         logIn_btn.setOnClickListener(this)
         db = PhotoRoomDatabase.getDatabase(applicationContext)
         SharedPrefsManager.init(applicationContext)
     }
 
+    override fun onPause() {
+        super.onPause()
+        finish()
+    }
+
     override fun onClick(v: View?) {
-        if (loIn_ET.text.isNotEmpty()) {
+        if (loIn_ET.text?.isNotEmpty() == true) {
             checkUserLogIn(loIn_ET.text.toString())
         } else {
             Toast.makeText(this, getString(R.string.empty_login_field), Toast.LENGTH_SHORT).show()

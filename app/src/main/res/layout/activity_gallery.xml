@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/grey_100"
+    android:background="?attr/bg"
     tools:context=".ui.GalleryActivity">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -13,10 +13,9 @@
         android:layout_height="0dp"
         android:layout_weight="2"/>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/to_camera_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/RegularButton"
         android:layout_gravity="center"
         android:text="@string/make_photo" />
 </LinearLayout>

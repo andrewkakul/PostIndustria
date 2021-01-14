@@ -9,4 +9,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="make_photo">Make Photo</string>
     <string name="download">Download</string>
+    <string name="change_theme">Change theme</string>
+    <string name="day_theme">Day theme</string>
+    <string name="night_theme">Night theme</string>
 </resources>

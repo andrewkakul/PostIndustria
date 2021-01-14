@@ -1,20 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_100"
-    android:orientation="vertical"
+    android:background="?attr/bg"
     tools:context=".ui.MainActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <EditText
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/input_text_ET"
+            style="@style/RegularEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
@@ -23,10 +25,9 @@
             android:inputType="text"
             android:tint="@string/your_text" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/search_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/RegularButton"
             android:layout_marginStart="32dp"
             android:layout_marginTop="16dp"
             android:text="@string/search" />
@@ -36,49 +37,38 @@
         android:id="@+id/photo_cards_rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="8"
-        android:layout_marginTop="16dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="@color/white"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
         <ImageButton
             android:id="@+id/IV_link_to_favourite"
-            android:background="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
+            style="@style/NavigationImageButton"
             app:srcCompat="@drawable/ic_favorite_border_24px" />
 
         <ImageButton
             android:id="@+id/IV_link_to_map"
-            android:background="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
+            style="@style/NavigationImageButton"
             app:srcCompat="@drawable/ic_map_24px" />
 
         <ImageButton
             android:id="@+id/IV_link_to_gallery"
-            android:background="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
+            style="@style/NavigationImageButton"
             app:srcCompat="@drawable/ic_photo_library_24px" />
 
         <ImageButton
             android:id="@+id/IV_link_to_history"
-            android:background="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="center"
+            style="@style/NavigationImageButton"
             app:srcCompat="@drawable/ic_history_24px" />
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
