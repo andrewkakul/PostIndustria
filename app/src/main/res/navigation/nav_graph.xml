@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    android:id="@+id/nav_graph"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/searchFragment">
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.postindustriaandroid.ui.fragments.SearchFragment"
+        android:label="@string/search"
+        tools:layout="@layout/fragment_search">
+        <action
+            android:id="@+id/action_searchFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/historyFragment"
+        android:name="com.example.postindustriaandroid.ui.fragments.HistoryFragment"
+        android:label="@string/history"
+        tools:layout="@layout/fragment_history"/>
+
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.example.postindustriaandroid.ui.fragments.MapsFragment"
+        android:label="@string/map"
+        tools:layout="@layout/fragment_maps">
+        <action
+            android:id="@+id/action_mapsFragment_to_mapSearchFragment"
+            app:destination="@id/mapSearchFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favouriteFragment"
+        android:name="com.example.postindustriaandroid.ui.fragments.FavouriteFragment"
+        android:label="Favourite"
+        tools:layout="@layout/fragment_favourite"/>
+
+    <fragment
+        android:id="@+id/galleryFragment"
+        android:name="com.example.postindustriaandroid.ui.fragments.GalleryFragment"
+        android:label="Gallery"
+        tools:layout="@layout/fragment_gallery"/>
+
+    <fragment
+        android:id="@+id/mapSearchFragment"
+        android:name="com.example.postindustriaandroid.ui.fragments.MapSearchFragment"
+        android:label="MapSearch"
+        tools:layout="@layout/fragment_map_search">
+            <argument
+                android:name="latitude"
+                app:argType="float"
+                android:defaultValue="0.0"/>
+            <argument
+                android:name="longitude"
+                app:argType="float"
+                android:defaultValue="0.0"/>
+        <action
+            android:id="@+id/action_mapSearchFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/webViewFragment"
+        android:name="com.example.postindustriaandroid.ui.fragments.WebViewFragment"
+        android:label="WebView"
+        tools:layout="@layout/fragment_web_view">
+            <argument
+                android:name="photo_url"
+                app:argType="string"
+                android:defaultValue=""/>
+            <argument
+                android:name="search_text"
+                app:argType="string"
+                android:defaultValue=""/>
+            <argument
+                android:name="user_id"
+                app:argType="long"
+                android:defaultValue="0L"/>
+    </fragment>
+
+    <!--Global Action-->
+    <action
+        android:id="@+id/action_to_searchFragment"
+        app:destination="@+id/searchFragment"/>
+
+    <action
+        android:id="@+id/action_to_historyFragment"
+        app:destination="@+id/historyFragment"/>
+
+    <action
+        android:id="@+id/action_to_mapsFragment"
+        app:destination="@+id/mapsFragment"/>
+
+    <action
+        android:id="@+id/action_to_favouriteFragment"
+        app:destination="@+id/favouriteFragment"/>
+
+    <action
+        android:id="@+id/action_to_galleryFragment"
+        app:destination="@+id/galleryFragment"/>
+</navigation>

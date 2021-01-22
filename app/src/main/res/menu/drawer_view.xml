@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/searchFragment"
+            android:icon="@drawable/ic_search_24px"
+            android:title="@string/search" />
+        <item
+            android:id="@+id/mapsFragment"
+            android:icon="@drawable/ic_map_24px"
+            android:title="@string/map" />
+        <item
+            android:id="@+id/favouriteFragment"
+            android:icon="@drawable/ic_favorite_border_24px"
+            android:title="@string/favourite" />
+        <item
+            android:id="@+id/galleryFragment"
+            android:icon="@drawable/ic_photo_library_24px"
+            android:title="@string/gallery" />
+        <item
+            android:id="@+id/historyFragment"
+            android:icon="@drawable/ic_history_24px"
+            android:title="@string/history" />
+    </group>
+</menu>

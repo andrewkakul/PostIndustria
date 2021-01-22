@@ -1,53 +1,62 @@
-package com.example.postindustriaandroid.ui
+package com.example.postindustriaandroid.ui.fragments
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.postindustriaandroid.R
-import com.example.postindustriaandroid.data.adapters.*
+import com.example.postindustriaandroid.data.adapters.DeleteItemListener
+import com.example.postindustriaandroid.data.adapters.FavoritePhotoCardAdapter
+import com.example.postindustriaandroid.data.adapters.OnFavouriteCardListener
+import com.example.postindustriaandroid.data.adapters.SwipeToDeleteFavouriteCallback
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.database.entity.FavouritePhotoEntity
 import com.example.postindustriaandroid.data.viewmodel.FavouriteViewModel
 import com.example.postindustriaandroid.utils.SharedPrefsManager
-import kotlinx.android.synthetic.main.activity_favourite_photo.*
+import kotlinx.android.synthetic.main.fragment_favourite.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FavouritePhotoActivity : AppCompatActivity(), OnFavouriteCardListener, DeleteItemListener {
+class FavouriteFragment : Fragment(),OnFavouriteCardListener, DeleteItemListener {
 
     private lateinit var db: PhotoRoomDatabase
     private lateinit var recyclerView: RecyclerView
     private val photoAdapter = FavoritePhotoCardAdapter(this)
     private lateinit var viewModel: FavouriteViewModel
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (SharedPrefsManager.getTheme() == "night")
-            setTheme(R.style.Theme_PostindustriaAndroid_Dark)
-        setContentView(R.layout.activity_favourite_photo)
-        db = PhotoRoomDatabase.getDatabase(applicationContext)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_favourite, container, false)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        db = PhotoRoomDatabase.getDatabase(activity?.applicationContext!!)
         recyclerView = favouritePhoto_RV
         initViewModel()
     }
 
     private fun initViewModel() {
-        val userId = intent.getLongExtra(WebViewActivity.USERID, -1)
-
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = photoAdapter
 
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteFavouriteCallback(photoAdapter, this))
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
         viewModel = ViewModelProvider(this).get(FavouriteViewModel::class.java)
-        viewModel.favoriteLiveData.observe(this,{ favouriteList ->
+        viewModel.favoriteLiveData.observe(viewLifecycleOwner,{ favouriteList ->
             photoAdapter.setData(favouriteList)
         })
-        viewModel.getListOfPhoto(userId, db)
+        viewModel.getListOfPhoto(SharedPrefsManager.getUserID(), db)
     }
 
     override fun onDeleteBtnClick(position: Int, favouritePhotoEntity: FavouritePhotoEntity) {
@@ -65,5 +74,4 @@ class FavouritePhotoActivity : AppCompatActivity(), OnFavouriteCardListener, Del
             db.photoCardDao().delete(favouritePhotoEntity)
         }
     }
-
 }

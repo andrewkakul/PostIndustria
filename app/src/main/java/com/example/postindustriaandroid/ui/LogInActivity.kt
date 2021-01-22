@@ -18,10 +18,15 @@ class LogInActivity : AppCompatActivity(), View.OnClickListener {
 
     private var db: PhotoRoomDatabase? = null
 
+    companion object{
+        const val DAY = "day"
+        const val NIGHT = "night"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         SharedPrefsManager.init(applicationContext)
         super.onCreate(savedInstanceState)
-        if (SharedPrefsManager.getTheme() == MainActivity.NIGHT)
+        if (SharedPrefsManager.getTheme() == NIGHT)
             setTheme(R.style.Theme_PostindustriaAndroid_Dark)
         setContentView(R.layout.activity_log_in)
         logIn_btn.setOnClickListener(this)
@@ -43,17 +48,19 @@ class LogInActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun checkUserLogIn(userName: String){
-        val intent = Intent(this, MainActivity::class.java)
+        val intent = Intent(this, BaseActivity::class.java)
         lifecycleScope.launch(Dispatchers.IO) {
             if (db?.userDao()?.getUser(userName) == null){
                 db?.userDao()?.insert(UserEntity(0, userName))
             }
-            saveLastUserLogin(userName)
+            val user: UserEntity = db!!.userDao().getUser(userName)
+            saveLastUser(userName, user.id)
         }
         startActivity(intent)
     }
 
-    private fun saveLastUserLogin(login: String) {
+    private fun saveLastUser(login: String, user_id: Long) {
         SharedPrefsManager.saveLogin(login)
+        SharedPrefsManager.saveUserId(user_id)
     }
 }

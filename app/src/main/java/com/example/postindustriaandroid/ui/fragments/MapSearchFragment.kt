@@ -1,10 +1,14 @@
-package com.example.postindustriaandroid.ui
+package com.example.postindustriaandroid.ui.fragments
 
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.fragment.app.Fragment
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -13,42 +17,40 @@ import com.example.postindustriaandroid.data.adapters.OnCardListener
 import com.example.postindustriaandroid.data.adapters.PhotoCardAdapter
 import com.example.postindustriaandroid.data.adapters.search.SwipeToDeleteCardCallback
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
-import com.example.postindustriaandroid.data.database.entity.UserEntity
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
 import com.example.postindustriaandroid.data.service.NetworkManager
 import com.example.postindustriaandroid.utils.SharedPrefsManager
 import com.google.android.gms.maps.model.LatLng
+import kotlinx.android.synthetic.main.fragment_map_search.*
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlinx.android.synthetic.main.activity_map_search.*
-import kotlinx.coroutines.Dispatchers
 
-class MapSearchActivity : AppCompatActivity(), OnCardListener {
-
-    companion object{
-        const val PHOTO_LAT = "photo_lat"
-        const val PHOTO_lON = "photo_lon"
-    }
+class MapSearchFragment : Fragment(), OnCardListener {
 
     private lateinit var photoAdapter: PhotoCardAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var db: PhotoRoomDatabase
     private val TAG = "MapSearchActivity"
     private val mapSearchList: ArrayList<FlickrPhotoCard> = ArrayList()
+    private val args: MapSearchFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (SharedPrefsManager.getTheme() == MainActivity.NIGHT)
-            setTheme(R.style.Theme_PostindustriaAndroid_Dark)
-        setContentView(R.layout.activity_map_search)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_map_search, container, false)
+    }
 
-        db = PhotoRoomDatabase.getDatabase(applicationContext)
-        recyclerView = map_serach_rv
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        db = PhotoRoomDatabase.getDatabase(activity?.applicationContext!!)
+        recyclerView = map_search_rv
         photoAdapter = PhotoCardAdapter(mapSearchList, this)
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = photoAdapter
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCardCallback(photoAdapter))
         itemTouchHelper.attachToRecyclerView(recyclerView)
@@ -59,7 +61,7 @@ class MapSearchActivity : AppCompatActivity(), OnCardListener {
     }
 
     private fun executeSearch() {
-        val latLng = LatLng(intent.getDoubleExtra(PHOTO_LAT, -1.1), intent.getDoubleExtra(PHOTO_lON, -1.1))
+        val latLng = LatLng(args.latitude.toDouble(), args.longitude.toDouble())
         val service = NetworkManager.createService()
         val data = NetworkManager.createData(latLng)
         val call = service.getPhoto(data)
@@ -85,13 +87,10 @@ class MapSearchActivity : AppCompatActivity(), OnCardListener {
     }
 
     override fun onCardClicked(position: Int) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val user: UserEntity = db.userDao().getUser(login = SharedPrefsManager.getLogin())
-            val intent = Intent(this@MapSearchActivity, WebViewActivity::class.java)
-            intent.putExtra(WebViewActivity.PHOTOURL, mapSearchList[position].photoUrl)
-            intent.putExtra(WebViewActivity.SEARCHTEXT, mapSearchList[position].searchText)
-            intent.putExtra(WebViewActivity.USERID, user.id)
-            startActivity(intent)
-        }
+        val photo_url = mapSearchList[position].photoUrl
+        val search_text = mapSearchList[position].searchText
+        val user_id = SharedPrefsManager.getUserID()
+        val action = MapSearchFragmentDirections.actionMapSearchFragmentToWebViewFragment(photo_url,search_text,user_id)
+        findNavController().navigate(action)
     }
 }

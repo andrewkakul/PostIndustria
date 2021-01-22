@@ -1,15 +1,19 @@
-package com.example.postindustriaandroid.ui
+package com.example.postindustriaandroid.ui.fragments
 
 import android.Manifest
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import androidx.appcompat.app.AppCompatActivity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -21,63 +25,58 @@ import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.database.entity.FilesEntity
 import com.example.postindustriaandroid.data.viewmodel.PreviewFavouriteViewModel
 import com.example.postindustriaandroid.utils.SharedPrefsManager
-import kotlinx.android.synthetic.main.activity_webview.*
+import kotlinx.android.synthetic.main.fragment_web_view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
-
-class WebViewActivity : AppCompatActivity() {
+class WebViewFragment : Fragment() {
 
     private lateinit var db: PhotoRoomDatabase
     private lateinit var viewModel: PreviewFavouriteViewModel
-    companion object{
-        const val PHOTOURL = "photoUrlKey"
-        const val SEARCHTEXT = "searchTextKey"
-        const val USERID = "userID"
+    private val args: WebViewFragmentArgs by navArgs()
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_web_view, container, false)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (SharedPrefsManager.getTheme() == MainActivity.NIGHT)
-            setTheme(R.style.Theme_PostindustriaAndroid_Dark)
-        db = PhotoRoomDatabase.getDatabase(this)
-        SharedPrefsManager.init(this)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        db = activity?.applicationContext?.let { PhotoRoomDatabase.getDatabase(it) }!!
+        activity?.applicationContext?.let { SharedPrefsManager.init(it) }
         initViewModel()
 
-        text_webview_activity.text = intent.getStringExtra(SEARCHTEXT)
-        webview.loadUrl(intent.getStringExtra(PHOTOURL).toString())
+        text_webview_activity.text = args.searchText
+        webview.loadUrl(args.photoUrl)
 
         download_image_btn.setOnClickListener {
             downloadImage()
         }
     }
 
-    private fun initViewModel(){
-        val photoUrl: String = intent.getStringExtra(PHOTOURL).toString()
-        val searchText: String = intent.getStringExtra(SEARCHTEXT).toString()
-        val userId: Long = intent.getLongExtra(USERID, -1)
-        viewModel = ViewModelProvider(this).get(PreviewFavouriteViewModel::class.java)
-        val binding = DataBindingUtil.setContentView(this, R.layout.activity_webview) as PreviewFavouriteDataBinding
-        binding.viewmodel = viewModel
-
-        viewModel.isFavorite.observe(this, {
-            viewModel.saveData(photoUrl, searchText, db, userId)
-        })
-        viewModel.loadData(photoUrl, userId, db)
-    }
+     private fun initViewModel(){
+         viewModel = ViewModelProvider(this).get(PreviewFavouriteViewModel::class.java)
+         val binding = DataBindingUtil.setContentView(requireActivity(), R.layout.fragment_web_view) as PreviewFavouriteDataBinding
+       //  binding.viewmodel = viewModel
+         viewModel.isFavorite.observe(viewLifecycleOwner, {
+             viewModel.saveData(args.photoUrl, args.searchText, db, args.userId)
+         })
+         viewModel.loadData(args.photoUrl, args.userId, db)
+     }
 
     fun downloadImage(){
-        val photoUrl: String = intent.getStringExtra(PHOTOURL).toString()
-        val userId: Long = intent.getLongExtra(USERID, -1)
         if (ContextCompat.checkSelfPermission(
-                this,
+                context?.applicationContext!!,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED ||
             ContextCompat.checkSelfPermission(
-                this,
+                context?.applicationContext!!,
                 Manifest.permission.READ_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED) {
             val array = arrayOf(
@@ -86,11 +85,10 @@ class WebViewActivity : AppCompatActivity() {
             )
             requestPermissions(array, 1)
         }
-
         Glide.with(this)
             .asFile()
-            .load(photoUrl)
-            .addListener(object: RequestListener<File>{
+            .load(args.photoUrl)
+            .addListener(object: RequestListener<File> {
                 override fun onLoadFailed(
                     e: GlideException?,
                     model: Any?,
@@ -99,7 +97,6 @@ class WebViewActivity : AppCompatActivity() {
                 ): Boolean {
                     return false
                 }
-
                 override fun onResourceReady(
                     resource: File?,
                     model: Any?,
@@ -108,17 +105,16 @@ class WebViewActivity : AppCompatActivity() {
                     isFirstResource: Boolean
                 ): Boolean {
                     val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-                    val dir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+                    val dir = activity?.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
                     val file = File(dir, "${timeStamp}.jpg")
                     resource?.copyTo(file)
                     lifecycleScope.launch(Dispatchers.IO) {
-                        db.filesDao().insert(FilesEntity(0, Uri.fromFile(file).toString(), userId))
+                        db.filesDao().insert(FilesEntity(0, Uri.fromFile(file).toString(), args.userId))
                     }
                     return false
                 }
             })
             .submit()
-        finish()
     }
 
     override fun onRequestPermissionsResult(

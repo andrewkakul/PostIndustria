@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/bg"
+    tools:context=".ui.fragments.GalleryFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="?attr/bg">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/gallery_RV"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/to_camera_btn"
+            style="@style/RegularButton"
+            android:layout_gravity="center"
+            android:text="@string/make_photo" />
+    </LinearLayout>
+
+</FrameLayout>
