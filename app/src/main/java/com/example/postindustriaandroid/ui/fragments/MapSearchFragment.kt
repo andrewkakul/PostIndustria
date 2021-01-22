@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -20,7 +21,7 @@ import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
 import com.example.postindustriaandroid.data.service.NetworkManager
-import com.example.postindustriaandroid.utils.SharedPrefsManager
+import com.example.postindustriaandroid.data.viewmodel.BaseViewModel
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_map_search.*
 import kotlinx.coroutines.launch
@@ -36,6 +37,8 @@ class MapSearchFragment : Fragment(), OnCardListener {
     private val TAG = "MapSearchActivity"
     private val mapSearchList: ArrayList<FlickrPhotoCard> = ArrayList()
     private val args: MapSearchFragmentArgs by navArgs()
+    private var twoPain = false
+    lateinit var model: BaseViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,6 +57,12 @@ class MapSearchFragment : Fragment(), OnCardListener {
         recyclerView.adapter = photoAdapter
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCardCallback(photoAdapter))
         itemTouchHelper.attachToRecyclerView(recyclerView)
+
+        model = ViewModelProvider(requireActivity()).get(BaseViewModel::class.java)
+
+        if (map_search_detail_container != null) {
+            twoPain = true;
+        }
 
         lifecycleScope.launch {
             executeSearch()
@@ -89,8 +98,15 @@ class MapSearchFragment : Fragment(), OnCardListener {
     override fun onCardClicked(position: Int) {
         val photo_url = mapSearchList[position].photoUrl
         val search_text = mapSearchList[position].searchText
-        val user_id = SharedPrefsManager.getUserID()
-        val action = MapSearchFragmentDirections.actionMapSearchFragmentToWebViewFragment(photo_url,search_text,user_id)
-        findNavController().navigate(action)
+        model.setData(photo_url, search_text)
+        if(twoPain){
+            val fragment = WebViewFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.map_search_detail_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        } else {
+            findNavController().navigate(R.id.action_mapSearchFragment_to_webViewFragment)
+        }
     }
 }

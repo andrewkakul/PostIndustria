@@ -13,7 +13,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -23,6 +22,7 @@ import com.example.postindustriaandroid.PreviewFavouriteDataBinding
 import com.example.postindustriaandroid.R
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.database.entity.FilesEntity
+import com.example.postindustriaandroid.data.viewmodel.BaseViewModel
 import com.example.postindustriaandroid.data.viewmodel.PreviewFavouriteViewModel
 import com.example.postindustriaandroid.utils.SharedPrefsManager
 import kotlinx.android.synthetic.main.fragment_web_view.*
@@ -36,25 +36,27 @@ class WebViewFragment : Fragment() {
 
     private lateinit var db: PhotoRoomDatabase
     private lateinit var viewModel: PreviewFavouriteViewModel
-    private val args: WebViewFragmentArgs by navArgs()
+
+    lateinit var model: BaseViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_web_view, container, false)
+    ): View {
+        db = activity?.applicationContext?.let { PhotoRoomDatabase.getDatabase(it) }!!
+        activity?.applicationContext?.let { SharedPrefsManager.init(it) }
+        val binding = DataBindingUtil.inflate(inflater, R.layout.fragment_web_view, container, false) as PreviewFavouriteDataBinding
+        model = ViewModelProvider(requireActivity()).get(BaseViewModel::class.java)
+        initViewModel()
+        binding.viewmodel = viewModel
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        db = activity?.applicationContext?.let { PhotoRoomDatabase.getDatabase(it) }!!
-        activity?.applicationContext?.let { SharedPrefsManager.init(it) }
-        initViewModel()
-
-        text_webview_activity.text = args.searchText
-        webview.loadUrl(args.photoUrl)
-
+        text_webview_activity.text = model.search_text
+        webview.loadUrl(model.photo_url)
         download_image_btn.setOnClickListener {
             downloadImage()
         }
@@ -62,12 +64,10 @@ class WebViewFragment : Fragment() {
 
      private fun initViewModel(){
          viewModel = ViewModelProvider(this).get(PreviewFavouriteViewModel::class.java)
-         val binding = DataBindingUtil.setContentView(requireActivity(), R.layout.fragment_web_view) as PreviewFavouriteDataBinding
-       //  binding.viewmodel = viewModel
          viewModel.isFavorite.observe(viewLifecycleOwner, {
-             viewModel.saveData(args.photoUrl, args.searchText, db, args.userId)
+             viewModel.saveData(model.photo_url, model.search_text, db, SharedPrefsManager.getUserID())
          })
-         viewModel.loadData(args.photoUrl, args.userId, db)
+         viewModel.loadData(model.photo_url, SharedPrefsManager.getUserID(), db)
      }
 
     fun downloadImage(){
@@ -87,7 +87,7 @@ class WebViewFragment : Fragment() {
         }
         Glide.with(this)
             .asFile()
-            .load(args.photoUrl)
+            .load(model.photo_url)
             .addListener(object: RequestListener<File> {
                 override fun onLoadFailed(
                     e: GlideException?,
@@ -109,7 +109,7 @@ class WebViewFragment : Fragment() {
                     val file = File(dir, "${timeStamp}.jpg")
                     resource?.copyTo(file)
                     lifecycleScope.launch(Dispatchers.IO) {
-                        db.filesDao().insert(FilesEntity(0, Uri.fromFile(file).toString(), args.userId))
+                        db.filesDao().insert(FilesEntity(0, Uri.fromFile(file).toString(), SharedPrefsManager.getUserID()))
                     }
                     return false
                 }

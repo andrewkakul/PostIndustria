@@ -67,18 +67,6 @@
         android:name="com.example.postindustriaandroid.ui.fragments.WebViewFragment"
         android:label="WebView"
         tools:layout="@layout/fragment_web_view">
-            <argument
-                android:name="photo_url"
-                app:argType="string"
-                android:defaultValue=""/>
-            <argument
-                android:name="search_text"
-                app:argType="string"
-                android:defaultValue=""/>
-            <argument
-                android:name="user_id"
-                app:argType="long"
-                android:defaultValue="0L"/>
     </fragment>
 
     <!--Global Action-->

@@ -14,7 +14,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.onNavDestinationSelected
 import androidx.navigation.ui.setupWithNavController
 import com.example.postindustriaandroid.R
-import com.example.postindustriaandroid.ui.LogInActivity
 import com.example.postindustriaandroid.utils.BatteryReceiver
 import com.example.postindustriaandroid.utils.SharedPrefsManager
 import com.google.android.material.appbar.CollapsingToolbarLayout
@@ -47,6 +46,7 @@ class BaseActivity : AppCompatActivity() {
         )
     }
 
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
         return navController.navigateUp(appBarConfiguration)
@@ -54,6 +54,7 @@ class BaseActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        super.onCreateOptionsMenu(menu)
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
@@ -64,7 +65,7 @@ class BaseActivity : AppCompatActivity() {
                 SharedPrefsManager.saveTheme(LogInActivity.DAY)
                 recreate()
             }
-            R.id.menuNightThemeChange->{
+            R.id.menuNightThemeChange-> {
                 SharedPrefsManager.saveTheme(LogInActivity.NIGHT)
                 recreate()
             }

@@ -2,10 +2,11 @@ package com.example.postindustriaandroid.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -20,6 +21,7 @@ import com.example.postindustriaandroid.data.database.entity.HistoryEntity
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
 import com.example.postindustriaandroid.data.service.NetworkManager
+import com.example.postindustriaandroid.data.viewmodel.BaseViewModel
 import com.example.postindustriaandroid.utils.SharedPrefsManager
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.coroutines.Dispatchers
@@ -35,7 +37,8 @@ class SearchFragment : Fragment(), OnCardListener {
     private lateinit var photoAdapter: PhotoCardAdapter
     private lateinit var recyclerView: RecyclerView
     private lateinit var db: PhotoRoomDatabase
-
+    private lateinit var model: BaseViewModel
+    private var twoPain = false
     private val TAG = "SearchFragment"
 
     override fun onCreateView(
@@ -57,6 +60,8 @@ class SearchFragment : Fragment(), OnCardListener {
         recyclerView.adapter = photoAdapter
         recyclerView.layoutManager = LinearLayoutManager(context)
 
+        model = ViewModelProvider(requireActivity()).get(BaseViewModel::class.java)
+
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCardCallback(photoAdapter))
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
@@ -67,13 +72,17 @@ class SearchFragment : Fragment(), OnCardListener {
                     executeSearch()
                 }
         }
+
+        if (search_detail_container != null) {
+            twoPain = true;
+        }
     }
 
     private fun saveLastSearch(searchText: String) {
         SharedPrefsManager.saveHistory(searchText)
         lifecycleScope.launch(Dispatchers.IO){
             val user_id = db.userDao().getUser(SharedPrefsManager.getLogin()).id
-            db.historyDao().insert(HistoryEntity(0,searchText,user_id))
+            db.historyDao().insert(HistoryEntity(0, searchText, user_id))
         }
     }
 
@@ -84,7 +93,10 @@ class SearchFragment : Fragment(), OnCardListener {
         val call = service.getPhoto(data)
 
         call.enqueue(object : Callback<FlickrPhotoResponce> {
-            override fun onResponse(call: Call<FlickrPhotoResponce>, response: Response<FlickrPhotoResponce>) {
+            override fun onResponse(
+                call: Call<FlickrPhotoResponce>,
+                response: Response<FlickrPhotoResponce>
+            ) {
                 createCardsList(response.body()!!)
                 photo_cards_rv.adapter?.notifyDataSetChanged()
             }
@@ -104,10 +116,17 @@ class SearchFragment : Fragment(), OnCardListener {
     }
 
     override fun onCardClicked(position: Int) {
-            val photo_url = cardsList[position].photoUrl
-            val search_text = cardsList[position].searchText
-            val user_id = SharedPrefsManager.getUserID()
-            val action = SearchFragmentDirections.actionSearchFragmentToWebViewFragment(photo_url,search_text,user_id)
-            findNavController().navigate(action)
+        val photo_url = cardsList[position].photoUrl
+        val search_text = cardsList[position].searchText
+        model.setData(photo_url, search_text)
+        if(twoPain){
+            val fragment = WebViewFragment()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.search_detail_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        } else {
+            findNavController().navigate(R.id.action_searchFragment_to_webViewFragment)
+        }
     }
 }
