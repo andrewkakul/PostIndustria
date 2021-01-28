@@ -8,7 +8,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 object NetworkManager {
 
     fun createService(): PhotoRepository {
-        val gson = GsonBuilder().setLenient().create()
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
 
         val retrofit = Retrofit.Builder()
             .baseUrl(PhotoRepository.BASE_URL)

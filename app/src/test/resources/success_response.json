@@ -1,0 +1,44 @@
+{
+  "photos": {
+    "page": 1,
+    "pages": 2145,
+    "perpage": 100,
+    "total": "214433",
+    "photo": [
+      {
+        "id": "50877353296",
+        "owner": "100032311@N06",
+        "secret": "322689f92f",
+        "server": "65535",
+        "farm": 66,
+        "title": "test_title_0",
+        "ispublic": 1,
+        "isfriend": 0,
+        "isfamily": 0
+      },
+      {
+        "id": "50876635493",
+        "owner": "100032311@N06",
+        "secret": "43fa028d89",
+        "server": "65535",
+        "farm": 66,
+        "title": "test_title_1",
+        "ispublic": 1,
+        "isfriend": 0,
+        "isfamily": 0
+      },
+      {
+        "id": "50877338171",
+        "owner": "91709233@N04",
+        "secret": "3a02bc072d",
+        "server": "65535",
+        "farm": 66,
+        "title": "test_title_2",
+        "ispublic": 1,
+        "isfriend": 0,
+        "isfamily": 0
+      }
+    ]
+  },
+  "stat": "ok"
+}
