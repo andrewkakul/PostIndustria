@@ -20,7 +20,4 @@ interface FavouritePhotoDao {
 
     @Query("SELECT * FROM favouritePhoto_table WHERE user_id=:userID ORDER BY searchText")
     suspend fun getListOfFavourite(userID: Long): List<FavouritePhotoEntity>
-
-    @Query("delete from favouritePhoto_table")
-    fun deleteAllPhotos()
 }

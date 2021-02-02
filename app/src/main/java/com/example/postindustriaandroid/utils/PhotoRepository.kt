@@ -1,4 +1,4 @@
-package com.example.postindustriaandroid.data.service
+package com.example.postindustriaandroid.utils
 
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
 import retrofit2.Call

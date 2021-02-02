@@ -1,4 +1,4 @@
-package com.example.postindustriaandroid.utils
+package com.example.postindustriaandroid.services
 
 import android.content.BroadcastReceiver
 import android.content.Context

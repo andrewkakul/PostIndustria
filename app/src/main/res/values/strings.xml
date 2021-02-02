@@ -1,24 +1,35 @@
 <resources>
     <string name="app_name">PIAndroid</string>
     <string name="search">Search</string>
-    <string name="your_text">Your text</string>
+    <string name="text">Text for search</string>
     <string name="logInTitle">Welcome</string>
     <string name="logIn_btn">Login</string>
     <string name="delete">Delete</string>
     <string name="empty_login_field">Login field is required!</string>
-    <string name="title_activity_maps">Map</string>
     <string name="make_photo">Make Photo</string>
     <string name="download">Download</string>
     <string name="change_theme">Change theme</string>
-    <string name="day_theme">Day theme</string>
     <string name="night_theme">Night theme</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="favourite">Favourite</string>
     <string name="map">Map</string>
     <string name="gallery">Gallery</string>
     <string name="history">History</string>
-    <string name="piandroid">PiAndroid</string>
-    <string name="title_item_list">Items</string>
-    <string name="title_item_detail">Item Detail</string>
+    <string name="setting">Setting</string>
+    <string name="period">Period</string>
+    <string name="apply">Apply</string>
+    <string name="background_upload">Background upload</string>
+    <string name="upload">Upload</string>
+
+    <!-- Preference Titles -->
+    <string name="theme_header">Theme</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Theme Preferences -->
+    <string name="night_theme_title">Night theme</string>
+
+    <!-- Upload Notification -->
+    <string name="checkPhotoUpdate">Check Photo Update</string>
+    <string name="newPhotosUpdated">New Photos updated</string>
+    <string name="channel_name">Upload</string>
+    <string name="channel_description">Description</string>
 </resources>

@@ -20,7 +20,7 @@ import com.example.postindustriaandroid.data.adapters.search.SwipeToDeleteCardCa
 import com.example.postindustriaandroid.data.database.PhotoRoomDatabase
 import com.example.postindustriaandroid.data.model.FlickrPhotoCard
 import com.example.postindustriaandroid.data.model.FlickrPhotoResponce
-import com.example.postindustriaandroid.data.service.NetworkManager
+import com.example.postindustriaandroid.utils.NetworkManager
 import com.example.postindustriaandroid.data.viewmodel.BaseViewModel
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.android.synthetic.main.fragment_map_search.*

@@ -66,8 +66,23 @@
         android:id="@+id/webViewFragment"
         android:name="com.example.postindustriaandroid.ui.fragments.WebViewFragment"
         android:label="WebView"
-        tools:layout="@layout/fragment_web_view">
+        tools:layout="@layout/fragment_web_view"/>
+
+    <fragment
+        android:id="@+id/uploadFragment"
+        android:name="com.example.postindustriaandroid.ui.fragments.UploadFragment"
+        android:label="Upload"
+        tools:layout="@layout/fragment_upload">
+        <action
+            android:id="@+id/action_uploadFragment_to_webViewFragment"
+            app:destination="@id/webViewFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.postindustriaandroid.ui.fragments.SettingsFragment"
+        android:label="@string/setting"
+        tools:layout="@xml/root_preferences"/>
 
     <!--Global Action-->
     <action
@@ -89,4 +104,12 @@
     <action
         android:id="@+id/action_to_galleryFragment"
         app:destination="@+id/galleryFragment"/>
+
+    <action
+        android:id="@+id/action_to_uploadFragment"
+        app:destination="@+id/uploadFragment"/>
+
+    <action
+        android:id="@+id/action_to_settingFragment"
+        app:destination="@+id/settingFragment"/>
 </navigation>

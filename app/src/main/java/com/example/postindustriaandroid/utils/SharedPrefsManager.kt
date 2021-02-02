@@ -47,14 +47,14 @@ object SharedPrefsManager {
         return context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
             .getString(HISTORY_REQUEST_KEY, null) ?: ""
     }
-    fun saveTheme(theme: String){
+    fun saveTheme(nightTheme: Boolean?){
         context.getSharedPreferences(APP_PREFERENCES,Context.MODE_PRIVATE).edit().apply(){
-            this.putString(THEME_KEY, theme)
+            this.putBoolean(THEME_KEY, nightTheme!!)
             this.apply()
         }
     }
-    fun getTheme(): String{
+    fun getTheme(): Boolean{
         return context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE)
-            .getString(THEME_KEY, null) ?: ""
+            .getBoolean(THEME_KEY, false)
     }
 }

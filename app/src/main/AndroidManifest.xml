@@ -19,14 +19,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PostindustriaAndroid">
 
-        <uses-library android:name="android.test.runner"
+        <service
+            android:name=".services.UploadService"
+            android:exported="false"/>
+
+        <uses-library
+            android:name="android.test.runner"
             android:required="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <receiver android:name=".utils.StartAppOnBoot">
+        <receiver android:name=".services.StartAppOnBoot">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
