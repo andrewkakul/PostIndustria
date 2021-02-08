@@ -1,0 +1,33 @@
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        app:title="@string/theme_header">
+        <SwitchPreference
+            app:key="night_theme"
+            app:title="@string/night_theme_title"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/background_upload">
+
+        <SwitchPreferenceCompat
+            app:key="upload"
+            app:title="@string/upload"/>
+
+        <EditTextPreference
+            app:dependency="upload"
+            app:key="search_text"
+            app:title="@string/text"
+            app:useSimpleSummaryProvider="true"/>
+
+        <ListPreference
+            app:key="period"
+            app:dependency="upload"
+            android:defaultValue="15"
+            app:entries="@array/update_periods_entries"
+            app:entryValues="@array/update_periods_values"
+            app:title="@string/period"
+            app:useSimpleSummaryProvider="true"/>
+    </PreferenceCategory>
+</PreferenceScreen>

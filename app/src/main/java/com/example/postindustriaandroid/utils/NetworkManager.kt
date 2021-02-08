@@ -1,4 +1,4 @@
-package com.example.postindustriaandroid.data.service
+package com.example.postindustriaandroid.utils
 
 import com.google.android.gms.maps.model.LatLng
 import com.google.gson.GsonBuilder

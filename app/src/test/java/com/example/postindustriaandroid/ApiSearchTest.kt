@@ -1,7 +1,7 @@
 package com.example.postindustriaandroid
 
-import com.example.postindustriaandroid.data.service.NetworkManager
-import com.example.postindustriaandroid.data.service.PhotoRepository
+import com.example.postindustriaandroid.utils.NetworkManager
+import com.example.postindustriaandroid.utils.PhotoRepository
 import com.google.gson.GsonBuilder
 import kotlinx.android.synthetic.main.fragment_search.*
 import kotlinx.coroutines.launch

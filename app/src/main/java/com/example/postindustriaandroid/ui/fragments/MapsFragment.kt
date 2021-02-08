@@ -83,7 +83,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback {
         }
         else {
             ActivityCompat.requestPermissions(
-                activity?.parent!!,
+                requireActivity(),
                 arrayOf<String>(Manifest.permission.ACCESS_FINE_LOCATION),
                 REQUEST_LOCATION_PERMISSION
             )

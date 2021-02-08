@@ -40,6 +40,12 @@
         <item name="darkTextColor">@color/black</item>
         <item name="android:itemBackground">@color/black</item>
         <item name="drawerArrowStyle">@style/DrawerIconStyle</item>
+        <item name="preferenceTheme">@style/PreferenceFragment</item>
+    </style>
+
+    <style name="PreferenceFragment" parent="PreferenceThemeOverlay">
+        <item name="android:background">?attr/bg</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
     <style name="DrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">

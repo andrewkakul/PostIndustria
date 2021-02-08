@@ -20,5 +20,13 @@
             android:id="@+id/historyFragment"
             android:icon="@drawable/ic_history_24px"
             android:title="@string/history" />
+        <item
+            android:id="@+id/uploadFragment"
+            android:icon="@drawable/ic_cloud_download_24px"
+            android:title="@string/upload" />
+        <item
+            android:id="@+id/settingFragment"
+            android:icon="@drawable/ic_settings_24px"
+            android:title="@string/setting" />
     </group>
 </menu>

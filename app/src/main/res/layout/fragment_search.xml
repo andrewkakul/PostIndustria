@@ -23,8 +23,7 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="16dp"
                 android:ems="10"
-                android:inputType="text"
-                android:tint="@string/your_text" />
+                android:inputType="text"/>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/search_btn"
